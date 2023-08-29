@@ -55,11 +55,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\DefectInfo.cs" />
+    <Compile Include="Model\FileInfo.cs" />
+    <Compile Include="Model\ShareInfo.cs" />
+    <Compile Include="Model\WaferInfo.cs" />
+    <Compile Include="ViewModel\ObservablePoint.cs" />
+    <Compile Include="ViewModel\OpenFileVM.cs" />
+    <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="ViewModel\WaferMapVM.cs" />
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OpenFile.xaml.cs">
       <DependentUpon>OpenFile.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WaferMap.xaml.cs">
+      <DependentUpon>WaferMap.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -78,6 +89,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\OpenFile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WaferMap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -108,5 +123,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

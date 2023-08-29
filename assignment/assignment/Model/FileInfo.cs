@@ -8,5 +8,7 @@ namespace assignment.Model
 {
     class FileInfo
     {
+        public string filePath;
+        public string fileData;
     }
 }

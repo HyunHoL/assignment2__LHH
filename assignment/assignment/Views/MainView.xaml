@@ -20,6 +20,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Wafer Map Viewer -->
-        <local:OpenFile Grid.Row="0" Grid.Column="0"/>
+        <local:OpenFile Grid.Row="1" Grid.Column="0"/>
+        <local:WaferMap Grid.Row="0" Grid.Column="0"/>
     </Grid>
 </Window>
