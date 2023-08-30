@@ -17,12 +17,40 @@ namespace assignment.ViewModel
 
     class WaferMapVM : INotifyPropertyChanged
     {
+        #region [상수]
+        private ShareInfo share;
+        private ObservableCollection<Point> coordinates;
+        private ObservableCollection<Point> defectCoordinates;
 
-        private ShareInfo shareInfo;
-        private WaferInfo wafer;
-        private ObservableCollection<ObservablePoint> coordinates;
+        #endregion
 
-        public ObservableCollection<ObservablePoint> Coordinates
+        #region [속성]
+        public ShareInfo Share
+        {
+            get { return share; }
+
+            set
+            {
+                if (share != value)
+                {
+                    if (share != null)
+                    {
+                        share.PropertyChanged -= ShareInfo_PropertyChanged;
+                    }
+
+                    share = value;
+
+                    if (share != null)
+                    {
+                        share.PropertyChanged += ShareInfo_PropertyChanged;
+                    }
+
+                    OnPropertyChanged("Share");
+                }
+            }
+        }
+
+        public ObservableCollection<Point> Coordinates
         {
             get { return coordinates; }
             set
@@ -30,47 +58,86 @@ namespace assignment.ViewModel
                 if (coordinates != value)
                 {
                     coordinates = value;
-                    OnPropertyChanged(nameof(Coordinates));
+                    OnPropertyChanged("Coordinates");
                 }
             }
         }
 
-        public ShareInfo Share
+        public ObservableCollection<Point> DefectCoordinates
         {
-            get;
-            set;
+            get { return defectCoordinates; }
+
+            set
+            {
+                if (defectCoordinates != value)
+                {
+                    defectCoordinates = value;
+                    OnPropertyChanged("DefectCoordinates");
+                }
+            }
         }
+
+        #endregion
+
+        #region [생성자]
 
         public WaferMapVM()
         {
-            Coordinates = new ObservableCollection<ObservablePoint>();
-            shareInfo = ShareInfo.Instance;
-            //UpdateSampleTestPlan();
+            Coordinates = new ObservableCollection<Point>();
+            DefectCoordinates = new ObservableCollection<Point>();
+            Share = ShareInfo.Instance;
+            share.PropertyChanged += ShareInfo_PropertyChanged;
         }
 
-        public void UpdateSampleTestPlan()
+        #endregion
+
+        #region [public Method]
+
+        public void UpdateSampleTestPlan ()
         {
-            if (shareInfo.IsFileOpened == true)
+            for (int i = 0; i < ShareInfo.Instance.Wafer.sampleTestPlan.Count; i++)
             {
-                foreach (Point samplePoint in ShareInfo.Instance.Wafer.sampleTestPlan)
-                {
-                    ObservablePoint saveValue = new ObservablePoint();
-                    saveValue.X = samplePoint.X;
-                    saveValue.Y = samplePoint.Y;
-                    Coordinates.Add(saveValue);
-                }
+                Point saveValue = new Point();
+                saveValue.X = (ShareInfo.Instance.Wafer.sampleTestPlan[i].X + 9) * 25;
+                saveValue.Y = (Math.Abs(ShareInfo.Instance.Wafer.sampleTestPlan[i].Y - 24) * 10);
+                Coordinates.Add(saveValue);
             }
-            //coordinates.Clear();
-            //Coordinates.Clear();
-
         }
 
+        public void UpdateDefectXY()
+        {
+            for (int i = 0; i < ShareInfo.Instance.DefectList.Count; i++)
+            {
+                Point saveValue = new Point();
+                saveValue.X = (ShareInfo.Instance.DefectXY[i].X + 9) * 25;
+                saveValue.Y = (Math.Abs(ShareInfo.Instance.DefectXY[i].Y - 24) * 10);
+                DefectCoordinates.Add(saveValue);
+            }
+        }
+
+        #endregion
+
+        #region [private Method]
         public event PropertyChangedEventHandler PropertyChanged;
+        
+        private void ShareInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Wafer")
+            {
+                UpdateSampleTestPlan();
+            }
+
+            else if (e.PropertyName == "DefectXY")
+            {
+                UpdateDefectXY();
+            }
+        }
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        #endregion
     }
 }

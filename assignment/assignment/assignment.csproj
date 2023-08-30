@@ -59,10 +59,13 @@
     <Compile Include="Model\FileInfo.cs" />
     <Compile Include="Model\ShareInfo.cs" />
     <Compile Include="Model\WaferInfo.cs" />
-    <Compile Include="ViewModel\ObservablePoint.cs" />
+    <Compile Include="ViewModel\DefectListVM.cs" />
     <Compile Include="ViewModel\OpenFileVM.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\WaferMapVM.cs" />
+    <Compile Include="Views\DefectList.xaml.cs">
+      <DependentUpon>DefectList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -84,6 +87,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\DefectList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

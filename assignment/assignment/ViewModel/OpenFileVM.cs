@@ -13,7 +13,8 @@ namespace assignment.ViewModel
         #region [상수]
 
         public ShareInfo shareInfo;
-
+        public event EventHandler OpenedFile;
+        private int value;
         #endregion
 
         #region [인터페이스]
@@ -24,11 +25,21 @@ namespace assignment.ViewModel
 
         #region [속성]
 
+        public int Value
+        {
+            get { return value; }
 
+            set
+            {
+                if (this.value != value)
+                {
+                    this.value = value;
+                    OnValueChanged(EventArgs.Empty);
+                }
+            }
+        }
 
         #endregion
-
-
 
         #region [생성자]
 
@@ -55,11 +66,14 @@ namespace assignment.ViewModel
         private void LoadFile (object parameter)
         {
             shareInfo.GetFileData();
-            shareInfo.ReadWaferInfo();
             shareInfo.GetDefectList();
-            shareInfo.ChangedValue();
+            shareInfo.ReadWaferInfo();
         }
 
+        protected virtual void OnValueChanged(EventArgs e)
+        {
+            OpenedFile?.Invoke(this, e);
+        }
         #endregion
     }
 }

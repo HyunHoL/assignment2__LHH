@@ -15,11 +15,10 @@ namespace assignment.Model
         #region [상수]
 
         private static ShareInfo instance;
-        public DefectInfo saveValue;
-        private WaferInfo wafer;
-        private FileInfo fileValue;
-        private List<DefectInfo> defectList;
-        private bool isFileOpened = false;
+        public WaferInfo wafer;
+        public FileInfo fileValue;
+        public List<DefectInfo> defectList;
+        public List<Point> defectXY;
         #endregion
 
         #region [인스턴스]
@@ -41,42 +40,72 @@ namespace assignment.Model
 
         #region [속성]
 
-
-        public WaferInfo Wafer { get; set; }
-        public FileInfo FileValue { get; set; }
-        public List<DefectInfo> DefectList { get; set; }
-
-        public bool IsFileOpened
+        public WaferInfo Wafer
         {
-            get { return isFileOpened; }
+            get { return wafer; }
 
             set
             {
-                if (isFileOpened != value )
+                if (wafer != value)
                 {
-                    isFileOpened = value;
-                    OnPropertyChanged("IsFileOpened");
+                    wafer = value;
+                    OnPropertyChanged("Wafer");
                 }
             }
         }
 
-        public void ChangedValue ()
+        public FileInfo FileValue 
         {
-            IsFileOpened = !IsFileOpened;
+            get { return fileValue; }
+
+            set
+            {
+                if (fileValue != value)
+                {
+                    fileValue = value;
+                    OnPropertyChanged("FileValue");
+                }
+            }
+        }
+
+        public List<DefectInfo> DefectList
+        {
+            get { return defectList; }
+
+            set
+            {
+                if (defectList != value)
+                {
+                    defectList = value;
+                    OnPropertyChanged("DefectList");
+                }
+            }
+        }
+
+        public List<Point> DefectXY
+        {
+            get { return defectXY; }
+
+            set
+            {
+                if (defectXY != value)
+                {
+                    defectXY = value;
+                    OnPropertyChanged("DefectXY");
+                }
+            }
         }
         #endregion
-
-
 
         #region [생성자]
 
         public ShareInfo()
         {
+            DefectXY = new List<Point>();
             instance = null;
             FileValue = new FileInfo();
             DefectList = new List<DefectInfo>();
             Wafer = new WaferInfo();
-            saveValue = new DefectInfo();
         }
 
         #endregion
@@ -107,21 +136,23 @@ namespace assignment.Model
 
         public void ReadWaferInfo()
         {
+            WaferInfo newWafer = new WaferInfo();
+
             int waferIDIndex = Instance.FileValue.fileData.IndexOf("WaferID ") + "WaferID".Length + 1;
             int endWaferIDIndex = Instance.FileValue.fileData.IndexOf(';', waferIDIndex);
-            Instance.Wafer.waferID = FileValue.fileData.Substring(waferIDIndex, endWaferIDIndex - waferIDIndex);
+            newWafer.waferID = FileValue.fileData.Substring(waferIDIndex, endWaferIDIndex - waferIDIndex);
 
             int timestampIndex = Instance.FileValue.fileData.IndexOf("FileTimestamp ") + "FileTimestamp".Length + 1;
             int endTimestampIndex = Instance.FileValue.fileData.IndexOf(';', timestampIndex);
-            Instance.Wafer.fileTimestamp = Instance.FileValue.fileData.Substring(timestampIndex, endTimestampIndex - timestampIndex);
+            newWafer.fileTimestamp = Instance.FileValue.fileData.Substring(timestampIndex, endTimestampIndex - timestampIndex);
 
             int lotIDIndex = Instance.FileValue.fileData.IndexOf("LotID ") + "LotID".Length + 1;
             int endLotIDIndex = Instance.FileValue.fileData.IndexOf(';', lotIDIndex);
-            Instance.Wafer.lotID = Instance.FileValue.fileData.Substring(lotIDIndex, endLotIDIndex - lotIDIndex);
+            newWafer.lotID = Instance.FileValue.fileData.Substring(lotIDIndex, endLotIDIndex - lotIDIndex);
 
             int deviceIDIndex = Instance.FileValue.fileData.IndexOf("DeviceID ") + "DeviceID".Length + 1;
             int endDeviceIDIndex = Instance.FileValue.fileData.IndexOf(';', deviceIDIndex);
-            Instance.Wafer.deviceID = Instance.FileValue.fileData.Substring(deviceIDIndex, endDeviceIDIndex - deviceIDIndex);
+            newWafer.deviceID = Instance.FileValue.fileData.Substring(deviceIDIndex, endDeviceIDIndex - deviceIDIndex);
 
             int testPlanIndex = Instance.FileValue.fileData.IndexOf("SampleTestPlan") + "SampleTestPlan".Length + 4;
             int endIndex = Instance.FileValue.fileData.IndexOf(';', testPlanIndex);
@@ -136,15 +167,19 @@ namespace assignment.Model
                 if (values.Length == 2 && int.TryParse(values[0], out int value1) && int.TryParse(values[1], out int value2))
                 {
                     Point saveValue = new Point();
-                    saveValue.X = value1 + 9;
-                    saveValue.Y = Math.Abs(value2 - 24);
-                    Instance.Wafer.sampleTestPlan.Add(saveValue);
+                    saveValue.X = value1;
+                    saveValue.Y = value2;
+                    newWafer.sampleTestPlan.Add(saveValue);
                 }
             }
+            Instance.Wafer = newWafer;
         }
 
         public void GetDefectList()
         {
+            List<DefectInfo> newDefectList = new List<DefectInfo>();
+            List<Point> newDefectXY = new List<Point>();
+
             int defectIndex = Instance.FileValue.fileData.IndexOf("DefectList") + "DefectList".Length;
             int endIndex = Instance.FileValue.fileData.IndexOf(';', defectIndex);
             string substringFile = Instance.FileValue.fileData.Substring(defectIndex, endIndex - defectIndex);
@@ -152,9 +187,9 @@ namespace assignment.Model
 
             string[] values = new string[17];
 
-            for (int i = 0; i < lines.Length / 2; i++)
+            for (int i = 0; i < lines.Length; i = i + 2)
             {
-
+                DefectInfo saveValue = new DefectInfo();
                 string[] defectValue;
                 defectValue = lines[i].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -163,16 +198,20 @@ namespace assignment.Model
                     values[k] = defectValue[k];
                 }
 
-                AddInfo(values);
-
+                AddInfo(values, saveValue);
+                newDefectList.Add(saveValue);
+                newDefectXY.Add(new Point { X = saveValue.defectXY.X, Y = saveValue.defectXY.Y });
             }
+            Instance.DefectList = newDefectList;
+            Instance.DefectXY = newDefectXY;
         }
+
         #endregion
 
 
         #region [private Method]
 
-        private void AddInfo(string[] values)
+        private void AddInfo(string[] values, DefectInfo saveValue)
         {
             if (values.Length < 17)
             {
@@ -182,8 +221,8 @@ namespace assignment.Model
             saveValue.defectID = double.Parse(values[0]);
             saveValue.xrel = double.Parse(values[1]);
             saveValue.yrel = double.Parse(values[2]);
-            saveValue.defectXY.X = double.Parse(values[3]) + 9;
-            saveValue.defectXY.Y = Math.Abs(double.Parse(values[4]) - 24);
+            saveValue.defectXY = new Point { X = double.Parse(values[3]), Y = double.Parse(values[4]) } ;
+            //saveValue.defectXY = double.Parse(values[4]);
             saveValue.xSize = double.Parse(values[5]);
             saveValue.ySize = double.Parse(values[6]);
             saveValue.defectArea = double.Parse(values[7]);
@@ -197,7 +236,6 @@ namespace assignment.Model
             saveValue.imageCount = double.Parse(values[15]);
             saveValue.imageList = double.Parse(values[16]);
 
-            Instance.DefectList.Add(saveValue);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

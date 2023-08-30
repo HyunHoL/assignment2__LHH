@@ -5,29 +5,53 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:assignment.ViewModel"
         mc:Ignorable="d"
-        Width="800"
-        Height="800"
              >
 
     <UserControl.DataContext>
         <local:WaferMapVM/>
     </UserControl.DataContext>
-    
+
     <Grid>
         <Canvas Background="Black">
             <ItemsControl ItemsSource="{Binding Coordinates}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemContainerStyle>
                     <Style>
-                        <Setter Property="Canvas.Left" Value="{Binding X, PresentationTraceSources.TraceLevel=High}" />
-                        <Setter Property="Canvas.Top" Value="{Binding Y, PresentationTraceSources.TraceLevel=High}" />
+                        <Setter Property="Canvas.Left" Value="{Binding X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
                     </Style>
                 </ItemsControl.ItemContainerStyle>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Rectangle Width="100" Height="100" Fill="LightGray" Opacity="1" Canvas.ZIndex="1"/>
+                        <Rectangle Width="20" Height="8" Fill="#FFD2D2D2" Stroke="Black" StrokeThickness="1"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            
+            <ItemsControl ItemsSource="{Binding DefectCoordinates}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="{Binding X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle Width="20" Height="8" Fill="#FFFF1E1E" Stroke="White" StrokeThickness="1"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Canvas>
     </Grid>
+    
+    
 </UserControl>

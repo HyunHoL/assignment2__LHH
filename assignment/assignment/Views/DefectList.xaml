@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="assignment.Views.DefectList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:assignment.ViewModel"
+        mc:Ignorable="d"
+        >
+
+    <UserControl.DataContext>
+        <local:DefectListVM/>
+    </UserControl.DataContext>
+    
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" Background="White" TextWrapping="Wrap" Text="Sample Information" VerticalAlignment="Top" FontSize="20" FontWeight="Heavy" RenderTransformOrigin="1.218,2.274" Margin="10,22,0,0" Width="199"/>
+        <TextBlock HorizontalAlignment="Left" 
+                   TextWrapping="Wrap" 
+                   Background="White"
+                   FontSize="15"
+                   Text="{Binding DisplayFileTimestamp}" 
+                   VerticalAlignment="Top" 
+                   Margin="10,71,0,0" 
+                   Width="383"
+                   />
+        <TextBlock FontSize="15" Background="White" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding DisplayWaferID}" VerticalAlignment="Top" Margin="10,107,0,0" Width="383"/>
+        <TextBlock FontSize="15" Background="White" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding DisplayLotID}" VerticalAlignment="Top" Margin="10,143,0,0" Width="286"/>
+        <TextBlock FontSize="15" Background="White" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding DisplayDeviceID}" VerticalAlignment="Top" Margin="10,180,0,0" Width="286"/>
+        <ListView ItemsSource="{Binding DefectValue}" HorizontalAlignment="Left" Height="215" VerticalAlignment="Top" Width="780" Margin="10,225,0,0">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="50" DisplayMemberBinding="{Binding DisplayNullText}"/>
+                    <GridViewColumn Header="DEFECTID" Width="100" DisplayMemberBinding="{Binding defectID}"/>
+                    <GridViewColumn Header="XREL" Width="100 " DisplayMemberBinding="{Binding xrel}"/>
+                    <GridViewColumn Header="YREL" Width="100" DisplayMemberBinding="{Binding yrel}"/>
+                    <GridViewColumn Header="XINDEX" Width="100" DisplayMemberBinding="{Binding defectXY.X}"/>
+                    <GridViewColumn Header="YINDEX" Width="100" DisplayMemberBinding="{Binding defectXY.Y}"/>
+                    <GridViewColumn Header="XSIZE" Width="100" DisplayMemberBinding="{Binding xSize}"/>
+                    <GridViewColumn Header="YSIZE" Width="100" DisplayMemberBinding="{Binding ySize}"/>
+                    <GridViewColumn Header="DEFECT AREA" Width="100" DisplayMemberBinding="{Binding defectArea}"/>
+                    <GridViewColumn Header="DSIZE" Width="100" DisplayMemberBinding="{Binding dSize}"/>
+                    <GridViewColumn Header="CLASSNUMBER" Width="100" DisplayMemberBinding="{Binding classNumber}"/>
+                    <GridViewColumn Header="TEST" Width="100" DisplayMemberBinding="{Binding test}"/>
+                    <GridViewColumn Header="CLUSTERNUMBER" Width="100" DisplayMemberBinding="{Binding clusterNumber}"/>
+                    <GridViewColumn Header="ROUGHBINNUMBER" Width="100" DisplayMemberBinding="{Binding roughBinNumber}"/>
+                    <GridViewColumn Header="FINEBINNUMBER" Width="100" DisplayMemberBinding="{Binding fineBinNumber}"/>
+                    <GridViewColumn Header="REVIEWSAMPLE" Width="100" DisplayMemberBinding="{Binding reviewSample}"/>
+                    <GridViewColumn Header="IMAGECOUNT" Width="100" DisplayMemberBinding="{Binding imageCount}"/>
+                    <GridViewColumn Header="IMAGELIST" Width="100" DisplayMemberBinding="{Binding imageList}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>
