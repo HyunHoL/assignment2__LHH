@@ -14,7 +14,7 @@ namespace assignment.ViewModel
         #region [상수]
 
         private string displayLotID, displayWaferID, displayDeviceID, displayFileTimestamp, displayNullText;
-        private ShareInfo share;
+        private GetAllInfo share;
         private ObservableCollection<DefectInfo> defectValue;
 
         #endregion
@@ -24,7 +24,7 @@ namespace assignment.ViewModel
         #region [속성]
 
 
-        public ShareInfo Share
+        public GetAllInfo Share
         {
             get { return share; }
 
@@ -34,14 +34,14 @@ namespace assignment.ViewModel
                 {
                     if (share != null)
                     {
-                        share.PropertyChanged -= ShareInfo_PropertyChanged;
+                        share.PropertyChanged -= GetAllInfo_PropertyChanged;
                     }
 
                     share = value;
 
                     if (share != null)
                     {
-                        share.PropertyChanged += ShareInfo_PropertyChanged;
+                        share.PropertyChanged += GetAllInfo_PropertyChanged;
                     }
 
                     OnPropertyChanged("Share");
@@ -56,8 +56,8 @@ namespace assignment.ViewModel
         public DefectListVM()
         {
             DefectValue = new ObservableCollection<DefectInfo>();
-            share = ShareInfo.Instance;
-            share.PropertyChanged += ShareInfo_PropertyChanged;
+            share = GetAllInfo.Instance;
+            share.PropertyChanged += GetAllInfo_PropertyChanged;
         }
 
         #endregion
@@ -157,10 +157,10 @@ namespace assignment.ViewModel
             DisplayDeviceID = "DeviceID : " + share.Wafer.deviceID;
             DisplayFileTimestamp = "FileTimestamp : " + share.Wafer.fileTimestamp;
 
-            for (int i = 0; i < ShareInfo.Instance.DefectList.Count; i++)
+            for (int i = 0; i < GetAllInfo.Instance.DefectList.Count; i++)
             {
                 DefectInfo saveValue = new DefectInfo();
-                saveValue = ShareInfo.Instance.DefectList[i];
+                saveValue = GetAllInfo.Instance.DefectList[i];
                 DefectValue.Add(saveValue);
             }
         }
@@ -169,7 +169,7 @@ namespace assignment.ViewModel
 
         #region [private Method]
 
-        private void ShareInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void GetAllInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Wafer")
             {

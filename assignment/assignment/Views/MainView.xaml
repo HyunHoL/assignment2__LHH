@@ -5,23 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:assignment.Views"
         mc:Ignorable="d"
-        Title="MainView" Height="1060" Width="1200">
+        Title="MainView" Height="1040" Width="1215"
+        ResizeMode="NoResize">
     <Grid>
-        <!-- Row Definitions -->
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Column Definitions -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Wafer Map Viewer -->
         <local:OpenFile Grid.Row="1" Grid.Column="0"/>
-        <local:WaferMap Grid.Row="0" Grid.Column="0" Margin="48,0,48.8,9.6"/>
+        <local:WaferMap Grid.Row="0" Grid.Column="0"/>
         <local:DefectList Grid.Row="1" Grid.Column="1"/>
     </Grid>
 </Window>

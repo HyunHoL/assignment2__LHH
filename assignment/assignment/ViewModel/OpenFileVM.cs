@@ -12,7 +12,7 @@ namespace assignment.ViewModel
     {
         #region [상수]
 
-        public ShareInfo shareInfo;
+        public GetAllInfo getAllInfo;
         public event EventHandler OpenedFile;
         private int value;
         #endregion
@@ -45,7 +45,7 @@ namespace assignment.ViewModel
 
         public OpenFileVM()
         {
-            shareInfo = ShareInfo.Instance;
+            getAllInfo = GetAllInfo.Instance;
             OpenFileCommand = new RelayCommand(LoadFile);
         }
 
@@ -65,9 +65,9 @@ namespace assignment.ViewModel
 
         private void LoadFile (object parameter)
         {
-            shareInfo.GetFileData();
-            shareInfo.GetDefectList();
-            shareInfo.ReadWaferInfo();
+            getAllInfo.GetFileData();
+            getAllInfo.GetDefectList();
+            getAllInfo.ReadWaferInfo();
         }
 
         protected virtual void OnValueChanged(EventArgs e)

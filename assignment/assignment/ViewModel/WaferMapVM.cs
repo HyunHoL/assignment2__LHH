@@ -17,15 +17,76 @@ namespace assignment.ViewModel
 
     class WaferMapVM : INotifyPropertyChanged
     {
+
         #region [상수]
-        private ShareInfo share;
+        private double actualWidth;
+        private double actualHeight;
+        private double rectangleWidth;
+        private double rectangleHeight;
+        private GetAllInfo share;
         private ObservableCollection<Point> coordinates;
         private ObservableCollection<Point> defectCoordinates;
 
         #endregion
 
         #region [속성]
-        public ShareInfo Share
+
+        public double ActualWidth
+        {
+            get { return actualWidth; }
+
+            set
+            {
+                actualWidth = value;
+                OnPropertyChanged("ActualWidth");
+                UpdateSampleTestPlan();
+                UpdateDefectXY();
+
+            }
+        }
+
+        public double ActualHeight
+        {
+            get { return actualHeight; }
+
+            set
+            {
+                actualHeight = value;
+                OnPropertyChanged("ActualHeight");
+                UpdateSampleTestPlan();
+                UpdateDefectXY();
+            }
+        }
+
+        public double RectangleWidth
+        {
+            get { return rectangleWidth; }
+
+            set
+            {
+                if (rectangleWidth != value)
+                {
+                    rectangleWidth = value;
+                    OnPropertyChanged("RectangleWidth");
+                }
+            }
+        }
+
+        public double RectangleHeight
+        {
+            get { return rectangleHeight; }
+
+            set
+            {
+                if (rectangleHeight != value)
+                {
+                    rectangleHeight = value;
+                    OnPropertyChanged("RectangleHeight");
+                }
+            }
+        }
+
+        public GetAllInfo Share
         {
             get { return share; }
 
@@ -35,14 +96,14 @@ namespace assignment.ViewModel
                 {
                     if (share != null)
                     {
-                        share.PropertyChanged -= ShareInfo_PropertyChanged;
+                        share.PropertyChanged -= GetAllInfo_PropertyChanged;
                     }
 
                     share = value;
 
                     if (share != null)
                     {
-                        share.PropertyChanged += ShareInfo_PropertyChanged;
+                        share.PropertyChanged += GetAllInfo_PropertyChanged;
                     }
 
                     OnPropertyChanged("Share");
@@ -85,8 +146,8 @@ namespace assignment.ViewModel
         {
             Coordinates = new ObservableCollection<Point>();
             DefectCoordinates = new ObservableCollection<Point>();
-            Share = ShareInfo.Instance;
-            share.PropertyChanged += ShareInfo_PropertyChanged;
+            Share = GetAllInfo.Instance;
+            share.PropertyChanged += GetAllInfo_PropertyChanged;
         }
 
         #endregion
@@ -95,22 +156,22 @@ namespace assignment.ViewModel
 
         public void UpdateSampleTestPlan ()
         {
-            for (int i = 0; i < ShareInfo.Instance.Wafer.sampleTestPlan.Count; i++)
+            for (int i = 0; i < GetAllInfo.Instance.Wafer.sampleTestPlan.Count; i++)
             {
                 Point saveValue = new Point();
-                saveValue.X = (ShareInfo.Instance.Wafer.sampleTestPlan[i].X + 9) * 25;
-                saveValue.Y = (Math.Abs(ShareInfo.Instance.Wafer.sampleTestPlan[i].Y - 24) * 10);
+                saveValue.X = (GetAllInfo.Instance.Wafer.sampleTestPlan[i].X + 9) * 30;
+                saveValue.Y = (Math.Abs(GetAllInfo.Instance.Wafer.sampleTestPlan[i].Y - 24) * 10);
                 Coordinates.Add(saveValue);
             }
         }
 
         public void UpdateDefectXY()
         {
-            for (int i = 0; i < ShareInfo.Instance.DefectList.Count; i++)
+            for (int i = 0; i < GetAllInfo.Instance.DefectList.Count; i++)
             {
                 Point saveValue = new Point();
-                saveValue.X = (ShareInfo.Instance.DefectXY[i].X + 9) * 25;
-                saveValue.Y = (Math.Abs(ShareInfo.Instance.DefectXY[i].Y - 24) * 10);
+                saveValue.X = (GetAllInfo.Instance.DefectXY[i].X + 9) * 30;
+                saveValue.Y = (Math.Abs(GetAllInfo.Instance.DefectXY[i].Y - 24) * 10);
                 DefectCoordinates.Add(saveValue);
             }
         }
@@ -120,7 +181,7 @@ namespace assignment.ViewModel
         #region [private Method]
         public event PropertyChangedEventHandler PropertyChanged;
         
-        private void ShareInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void GetAllInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Wafer")
             {

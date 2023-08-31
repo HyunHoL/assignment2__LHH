@@ -10,11 +10,11 @@ using System.Windows;
 
 namespace assignment.Model
 {
-    class ShareInfo : INotifyPropertyChanged
+    class GetAllInfo : INotifyPropertyChanged
     {
         #region [상수]
 
-        private static ShareInfo instance;
+        private static GetAllInfo instance;
         public WaferInfo wafer;
         public FileInfo fileValue;
         public List<DefectInfo> defectList;
@@ -23,13 +23,13 @@ namespace assignment.Model
 
         #region [인스턴스]
 
-        public static ShareInfo Instance
+        public static GetAllInfo Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = new ShareInfo();
+                    instance = new GetAllInfo();
                 }
 
                 return instance;
@@ -99,7 +99,7 @@ namespace assignment.Model
 
         #region [생성자]
 
-        public ShareInfo()
+        public GetAllInfo()
         {
             DefectXY = new List<Point>();
             instance = null;
