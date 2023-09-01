@@ -19,11 +19,11 @@ namespace assignment.ViewModel
     {
 
         #region [상수]
-        private double actualWidth;
-        private double actualHeight;
+
         private double rectangleWidth;
         private double rectangleHeight;
         private GetAllInfo share;
+        private MainViewModel mainVM;
         private ObservableCollection<Point> coordinates;
         private ObservableCollection<Point> defectCoordinates;
 
@@ -31,32 +31,6 @@ namespace assignment.ViewModel
 
         #region [속성]
 
-        public double ActualWidth
-        {
-            get { return actualWidth; }
-
-            set
-            {
-                actualWidth = value;
-                OnPropertyChanged("ActualWidth");
-                UpdateSampleTestPlan();
-                UpdateDefectXY();
-
-            }
-        }
-
-        public double ActualHeight
-        {
-            get { return actualHeight; }
-
-            set
-            {
-                actualHeight = value;
-                OnPropertyChanged("ActualHeight");
-                UpdateSampleTestPlan();
-                UpdateDefectXY();
-            }
-        }
 
         public double RectangleWidth
         {
@@ -111,6 +85,31 @@ namespace assignment.ViewModel
             }
         }
 
+        public MainViewModel MainVM
+        {
+            get { return mainVM; }
+
+            set
+            {
+                if (mainVM != value)
+                {
+                    if (mainVM != null)
+                    {
+                        mainVM.PropertyChanged -= MainViewModel_PropertyChanged;
+                    }
+
+                    mainVM = value;
+
+                    if (mainVM != null)
+                    {
+                        mainVM.PropertyChanged += MainViewModel_PropertyChanged;
+                    }
+
+                    OnPropertyChanged("MainVM");
+                }
+            }
+        }
+
         public ObservableCollection<Point> Coordinates
         {
             get { return coordinates; }
@@ -147,7 +146,9 @@ namespace assignment.ViewModel
             Coordinates = new ObservableCollection<Point>();
             DefectCoordinates = new ObservableCollection<Point>();
             Share = GetAllInfo.Instance;
+            MainVM = MainViewModel.Instance;
             share.PropertyChanged += GetAllInfo_PropertyChanged;
+            mainVM.PropertyChanged += MainViewModel_PropertyChanged;
         }
 
         #endregion
@@ -156,22 +157,36 @@ namespace assignment.ViewModel
 
         public void UpdateSampleTestPlan ()
         {
+            Coordinates.Clear();
+            Point MaxValue = GetMaxValue();
+            Point MinValue = GetMinValue();
+
+            RectangleWidth = MainViewModel.Instance.ActualWidth / (2 * (MaxValue.X - MinValue.X + 1)) - 0.5;
+            RectangleHeight = MainViewModel.Instance.ActualHeight / (2 * (MaxValue.Y - MinValue.Y + 1)) - 0.4;
+
             for (int i = 0; i < GetAllInfo.Instance.Wafer.sampleTestPlan.Count; i++)
             {
                 Point saveValue = new Point();
-                saveValue.X = (GetAllInfo.Instance.Wafer.sampleTestPlan[i].X + 9) * 30;
-                saveValue.Y = (Math.Abs(GetAllInfo.Instance.Wafer.sampleTestPlan[i].Y - 24) * 10);
+                saveValue.X = (GetAllInfo.Instance.Wafer.sampleTestPlan[i].X - MinValue.X) * RectangleWidth + 1;
+                saveValue.Y = (Math.Abs(GetAllInfo.Instance.Wafer.sampleTestPlan[i].Y - MaxValue.Y) * RectangleHeight) + 1;
                 Coordinates.Add(saveValue);
             }
         }
 
         public void UpdateDefectXY()
         {
+            DefectCoordinates.Clear();
+            Point MaxValue = GetMaxValue();
+            Point MinValue = GetMinValue();
+
+            RectangleWidth = MainViewModel.Instance.ActualWidth / (2 * (MaxValue.X - MinValue.X + 1)) - 0.5;
+            RectangleHeight = MainViewModel.Instance.ActualHeight / (2 * (MaxValue.Y - MinValue.Y + 1)) - 0.4;
+
             for (int i = 0; i < GetAllInfo.Instance.DefectList.Count; i++)
             {
                 Point saveValue = new Point();
-                saveValue.X = (GetAllInfo.Instance.DefectXY[i].X + 9) * 30;
-                saveValue.Y = (Math.Abs(GetAllInfo.Instance.DefectXY[i].Y - 24) * 10);
+                saveValue.X = (GetAllInfo.Instance.DefectXY[i].X - MinValue.X) * RectangleWidth + 1;
+                saveValue.Y = (Math.Abs(GetAllInfo.Instance.DefectXY[i].Y - MaxValue.Y) * RectangleHeight) + 1;
                 DefectCoordinates.Add(saveValue);
             }
         }
@@ -179,8 +194,31 @@ namespace assignment.ViewModel
         #endregion
 
         #region [private Method]
-        public event PropertyChangedEventHandler PropertyChanged;
-        
+
+        private Point GetMaxValue()
+        {
+            Point maxXY = new Point();
+            double maxX = 0;
+            double maxY = 0;
+            maxX = GetAllInfo.Instance.Wafer.sampleTestPlan.Max(point => point.X);
+            maxY = GetAllInfo.Instance.Wafer.sampleTestPlan.Max(point => point.Y);
+            maxXY.X = maxX;
+            maxXY.Y = maxY;
+            return maxXY;
+        }
+
+        private Point GetMinValue()
+        {
+            Point minXY = new Point();
+            double minX = 0;
+            double minY = 0;
+            minX = GetAllInfo.Instance.Wafer.sampleTestPlan.Min(point => point.X);
+            minY = GetAllInfo.Instance.Wafer.sampleTestPlan.Min(point => point.Y);
+            minXY.X = minX;
+            minXY.Y = minY;
+            return minXY;
+        }
+
         private void GetAllInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Wafer")
@@ -193,6 +231,17 @@ namespace assignment.ViewModel
                 UpdateDefectXY();
             }
         }
+
+        private void MainViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if ((e.PropertyName == "ActualWidth" || e.PropertyName == "ActualHeight") && GetAllInfo.Instance.Wafer.sampleTestPlan != null && GetAllInfo.Instance.DefectXY != null)
+            {
+                UpdateSampleTestPlan();
+                UpdateDefectXY();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)
         {

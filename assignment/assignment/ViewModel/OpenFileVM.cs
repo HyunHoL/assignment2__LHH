@@ -66,8 +66,6 @@ namespace assignment.ViewModel
         private void LoadFile (object parameter)
         {
             getAllInfo.GetFileData();
-            getAllInfo.GetDefectList();
-            getAllInfo.ReadWaferInfo();
         }
 
         protected virtual void OnValueChanged(EventArgs e)

@@ -34,7 +34,9 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Rectangle 
-                            Width="30" Height="10" Fill="#FFD2D2D2" Stroke="Black" StrokeThickness="1"/>
+                            Width="{Binding Path=DataContext.RectangleWidth, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                            Height="{Binding Path=DataContext.RectangleHeight, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                            Fill="#FFD2D2D2" Stroke="Black" StrokeThickness="1"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
@@ -54,7 +56,9 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Rectangle 
-                            Width="30" Height="10" Fill="#FFFF1E1E" Stroke="Black" StrokeThickness="1"/>
+                            Width="{Binding Path=DataContext.RectangleWidth, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                            Height="{Binding Path=DataContext.RectangleHeight, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                            Fill="#FFFF1E1E" Stroke="Black" StrokeThickness="1"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace assignment.Model
 {
@@ -19,6 +20,8 @@ namespace assignment.Model
         public FileInfo fileValue;
         public List<DefectInfo> defectList;
         public List<Point> defectXY;
+        public TifFileInfo tifValue;
+
         #endregion
 
         #region [인스턴스]
@@ -95,6 +98,21 @@ namespace assignment.Model
                 }
             }
         }
+
+        public TifFileInfo TifValue
+        {
+            get { return tifValue; }
+
+            set
+            {
+                if (tifValue != value)
+                {
+                    tifValue = value;
+                    OnPropertyChanged("TifValue");
+                }
+            }
+        }
+
         #endregion
 
         #region [생성자]
@@ -132,6 +150,9 @@ namespace assignment.Model
             {
                 Instance.FileValue.fileData = File.ReadAllText(FileValue.filePath);
             }
+            ReadWaferInfo();
+            GetDefectList();
+            GetTifData();
         }
 
         public void ReadWaferInfo()
@@ -206,6 +227,31 @@ namespace assignment.Model
             Instance.DefectXY = newDefectXY;
         }
 
+        public void GetTifData()
+        {
+            Instance.TifValue.filePath = @"C:\Users\hhlee\OneDrive - 에이티아이\바탕 화면\Klarf 과제\Klarf Format";
+            using (FileStream stream = new FileStream(TifValue.filePath, FileMode.Open, FileAccess.Read))
+            {
+                TiffBitmapDecoder decoder = new TiffBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                List<BitmapImage> imageList = new List<BitmapImage>();
+                foreach (BitmapFrame frame in decoder.Frames)
+                {
+                    MemoryStream memoryStream = new MemoryStream();
+                    BitmapEncoder encoder = new BmpBitmapEncoder();
+                    encoder.Frames.Add(frame);
+                    encoder.Save(memoryStream);
+
+                    BitmapImage bitmapImage = new BitmapImage();
+                    bitmapImage.BeginInit();
+                    bitmapImage.StreamSource = memoryStream;
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.EndInit();
+
+                    imageList.Add(bitmapImage);
+                }
+                Instance.TifValue.imageFile = imageList;
+            }
+        }
         #endregion
 
 
@@ -222,7 +268,6 @@ namespace assignment.Model
             saveValue.xrel = double.Parse(values[1]);
             saveValue.yrel = double.Parse(values[2]);
             saveValue.defectXY = new Point { X = double.Parse(values[3]), Y = double.Parse(values[4]) } ;
-            //saveValue.defectXY = double.Parse(values[4]);
             saveValue.xSize = double.Parse(values[5]);
             saveValue.ySize = double.Parse(values[6]);
             saveValue.defectArea = double.Parse(values[7]);

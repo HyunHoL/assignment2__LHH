@@ -4,9 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:assignment.Views"
+        xmlns:viewModel="clr-namespace:assignment.ViewModel"
         mc:Ignorable="d"
-        Title="MainView" Height="1040" Width="1215"
-        ResizeMode="NoResize">
+        Title="MainView"
+        Width="{Binding Instance.ActualWidth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+        Height="{Binding Instance.ActualHeight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+        >
+
+    <Window.DataContext>
+        <viewModel:MainViewModel/>
+    </Window.DataContext>
+    
     <Grid>
         
         <Grid.RowDefinitions>

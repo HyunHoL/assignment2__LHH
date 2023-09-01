@@ -171,7 +171,7 @@ namespace assignment.ViewModel
 
         private void GetAllInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Wafer")
+            if (e.PropertyName == "DefectList")
             {
                 AddValue();
             }
