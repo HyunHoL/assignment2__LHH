@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace assignment.ViewModel
 {
@@ -13,7 +14,8 @@ namespace assignment.ViewModel
     {
         #region [상수]
 
-        private string displayLotID, displayWaferID, displayDeviceID, displayFileTimestamp, displayNullText;
+        private string displayLotID, displayWaferID, displayDeviceID, displayFileTimestamp, displayNullText, defectListNum;
+        private DefectInfo selectedDefectList;
         private GetAllInfo share;
         private ObservableCollection<DefectInfo> defectValue;
 
@@ -23,6 +25,49 @@ namespace assignment.ViewModel
 
         #region [속성]
 
+        public ICommand IncreaseNum { get; }
+        public ICommand DecreaseNum { get; }
+
+        /**
+        * @brief DefectList를 클릭하였을 때, 해당 DefectList에서 이미지 번호를 뽑아오는 함수  
+        * @note Patch-notes
+        * 2022-09-04|이현호|
+        */
+
+        public DefectInfo SelectedDefectList
+        {
+            get { return selectedDefectList; }
+
+            set
+            {
+                if (selectedDefectList != value)
+                {
+                    selectedDefectList = value;
+                    TifFileInfo saveNum = new TifFileInfo();
+                    saveNum.imageNum = (int)selectedDefectList.defectID;
+                    saveNum.imageFile = share.TifValue.imageFile;
+                    saveNum.filePath = share.TifValue.filePath;
+
+                    share.TifValue = saveNum;
+                    DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
+                    OnPropertyChanged("SelectedDefectList");
+                }
+            }
+        }
+
+        public string DefectListNum
+        {
+            get { return defectListNum; }
+
+            set
+            {
+                if (defectListNum != value)
+                {
+                    defectListNum = value;
+                    OnPropertyChanged("DefectListNum");
+                }
+            }
+        }
 
         public GetAllInfo Share
         {
@@ -58,6 +103,9 @@ namespace assignment.ViewModel
             DefectValue = new ObservableCollection<DefectInfo>();
             share = GetAllInfo.Instance;
             share.PropertyChanged += GetAllInfo_PropertyChanged;
+
+            IncreaseNum = new RelayCommand(UpNumber);
+            DecreaseNum = new RelayCommand(DownNumber);
         }
 
         #endregion
@@ -150,8 +198,16 @@ namespace assignment.ViewModel
             }
         }
 
+        /**
+        * @brief DefectList View에 값을 출력하게 해주는 함수  
+        * @note Patch-notes
+        * 2022-08-31|이현호|
+        */
+
         public void AddValue()
         {
+            DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
+            DisplayNullText = "";
             DisplayWaferID = "WaferID : " + share.Wafer.waferID;
             DisplayLotID = "LotID : " + share.Wafer.lotID;
             DisplayDeviceID = "DeviceID : " + share.Wafer.deviceID;
@@ -163,6 +219,57 @@ namespace assignment.ViewModel
                 saveValue = GetAllInfo.Instance.DefectList[i];
                 DefectValue.Add(saveValue);
             }
+        }
+
+        /**
+        * @brief 버튼을 클릭하였을 때, 다음 Defect으로 넘겨주는 함수  
+        * @note Patch-notes
+        * 2022-09-04|이현호|
+        */
+
+        public void UpNumber(object paramerter)
+        {
+            int saveValue = int.Parse((string)paramerter);
+            TifFileInfo saveNum = new TifFileInfo();
+
+            if (share.TifValue.imageNum == 0)
+            {
+                share.TifValue.imageNum += 1;
+            }
+
+            else if (share.TifValue.imageNum == share.DefectList.Count)
+            {
+                share.TifValue.imageNum = 0;
+            }
+
+            saveNum.imageNum = share.TifValue.imageNum + saveValue;
+            saveNum.imageFile = share.TifValue.imageFile;
+            saveNum.filePath = share.TifValue.filePath;
+            share.TifValue = saveNum;
+            DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
+        }
+
+        /**
+        * @brief 버튼을 클릭하였을 때, 이전 Defect으로 넘겨주는 함수  
+        * @note Patch-notes
+        * 2022-09-04|이현호|
+        */
+
+        public void DownNumber(object parameter)
+        {
+            int saveValue = int.Parse((string)parameter);
+            TifFileInfo saveNum = new TifFileInfo();
+
+            if (share.TifValue.imageNum == 0 || share.TifValue.imageNum == 1)
+            {
+                share.TifValue.imageNum = share.DefectList.Count + 1;
+            }
+
+            saveNum.imageNum = share.TifValue.imageNum + saveValue;
+            saveNum.imageFile = share.TifValue.imageFile;
+            saveNum.filePath = share.TifValue.filePath;
+            share.TifValue = saveNum;
+            DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
         }
 
         #endregion

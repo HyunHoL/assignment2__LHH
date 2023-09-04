@@ -67,6 +67,7 @@
     <Compile Include="Model\GetAllInfo.cs" />
     <Compile Include="Model\TifFileInfo.cs" />
     <Compile Include="Model\WaferInfo.cs" />
+    <Compile Include="ViewModel\DefectImageVM.cs" />
     <Compile Include="ViewModel\DefectListVM.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\OpenFileVM.cs" />

@@ -36,7 +36,15 @@
                         <Rectangle 
                             Width="{Binding Path=DataContext.RectangleWidth, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
                             Height="{Binding Path=DataContext.RectangleHeight, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
-                            Fill="#FFD2D2D2" Stroke="Black" StrokeThickness="1"/>
+                            Fill="#FFD2D2D2" Stroke="Black" StrokeThickness="1">
+                            <Rectangle.ToolTip>
+                                <ToolTip Content="{Binding Coordinate, StringFormat='X: {0}, Y: {1}'}"/>
+                            </Rectangle.ToolTip>
+                            <Rectangle.InputBindings>
+                                <MouseBinding Gesture="LeftClick"
+                                              Command="{Binding YourCustomCommand}"/>
+                            </Rectangle.InputBindings>
+                        </Rectangle>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

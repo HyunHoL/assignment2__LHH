@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace assignment.Model
 {
-    class DefectInfo
+    class DefectInfo : INotifyPropertyChanged
     {
         private double saveDefectID;
 

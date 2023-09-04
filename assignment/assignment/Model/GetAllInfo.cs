@@ -124,17 +124,25 @@ namespace assignment.Model
             FileValue = new FileInfo();
             DefectList = new List<DefectInfo>();
             Wafer = new WaferInfo();
+            TifValue = new TifFileInfo();
+            TifValue.imageNum = 1;
         }
 
         #endregion
 
 
         #region [public Method]
+        /**
+        * @brief 파일을 열고 001 파일의 경로와 001 파일에 들어 있는 정보를 저장하는 함수  
+        * @note Patch-notes
+        * 2022-08-28|이현호|
+        */
 
         public void GetFileData()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = @"C:\Users\hhlee\OneDrive - 에이티아이\바탕 화면\Klarf 과제";
+            Instance.FileValue.folderPath = openFileDialog.InitialDirectory;
             string selectedFilePath = "";
 
             if (openFileDialog.ShowDialog() == true)
@@ -150,10 +158,18 @@ namespace assignment.Model
             {
                 Instance.FileValue.fileData = File.ReadAllText(FileValue.filePath);
             }
+
             ReadWaferInfo();
             GetDefectList();
             GetTifData();
+
         }
+
+        /**
+        * @brief 001 파일 정보에서 필요한 Wafer 정보를 추출해내는 함수  
+        * @note Patch-notes
+        * 2022-08-28|이현호|
+        */
 
         public void ReadWaferInfo()
         {
@@ -196,6 +212,12 @@ namespace assignment.Model
             Instance.Wafer = newWafer;
         }
 
+        /**
+        * @brief 001 파일 정보에서 필요한 Defect 정보를 추출해내는 함수  
+        * @note Patch-notes
+        * 2022-08-30|이현호|
+        */
+
         public void GetDefectList()
         {
             List<DefectInfo> newDefectList = new List<DefectInfo>();
@@ -227,35 +249,36 @@ namespace assignment.Model
             Instance.DefectXY = newDefectXY;
         }
 
+        /**
+        * @brief TIF 파일에서 이미지 정보를 추출해내는 함수  
+        * @note Patch-notes
+        * 2022-09-04|이현호|
+        */
+
         public void GetTifData()
         {
-            Instance.TifValue.filePath = @"C:\Users\hhlee\OneDrive - 에이티아이\바탕 화면\Klarf 과제\Klarf Format";
-            using (FileStream stream = new FileStream(TifValue.filePath, FileMode.Open, FileAccess.Read))
+            TifFileInfo saveValue = new TifFileInfo();
+
+            if (Instance.FileValue.folderPath != null)
             {
-                TiffBitmapDecoder decoder = new TiffBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-                List<BitmapImage> imageList = new List<BitmapImage>();
-                foreach (BitmapFrame frame in decoder.Frames)
-                {
-                    MemoryStream memoryStream = new MemoryStream();
-                    BitmapEncoder encoder = new BmpBitmapEncoder();
-                    encoder.Frames.Add(frame);
-                    encoder.Save(memoryStream);
-
-                    BitmapImage bitmapImage = new BitmapImage();
-                    bitmapImage.BeginInit();
-                    bitmapImage.StreamSource = memoryStream;
-                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmapImage.EndInit();
-
-                    imageList.Add(bitmapImage);
-                }
-                Instance.TifValue.imageFile = imageList;
+                saveValue.filePath = Directory.GetFiles(Instance.FileValue.folderPath, "*.tif");
             }
+
+            saveValue.imageFile = new TiffBitmapDecoder(new Uri(saveValue.filePath[0], UriKind.Absolute), BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+
+            TifValue = saveValue;
         }
+
         #endregion
 
 
         #region [private Method]
+
+        /**
+        * @brief Defect정보 중 Defect List에 값을 채워주는 함수  
+        * @note Patch-notes
+        * 2022-08-30|이현호|
+        */
 
         private void AddInfo(string[] values, DefectInfo saveValue)
         {

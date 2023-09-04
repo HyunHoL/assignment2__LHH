@@ -30,5 +30,6 @@
         <local:OpenFile Grid.Row="1" Grid.Column="0"/>
         <local:WaferMap Grid.Row="0" Grid.Column="0"/>
         <local:DefectList Grid.Row="1" Grid.Column="1"/>
+        <local:DefectImage Grid.Row="0" Grid.Column="1"/>
     </Grid>
 </Window>

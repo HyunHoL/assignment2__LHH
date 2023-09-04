@@ -63,6 +63,12 @@ namespace assignment.ViewModel
 
         #region [private Method]
 
+        /**
+        * @brief 버튼을 클릭하였을 때, 파일을 여는 작업부터 시작하게 해주는 함수
+        * 날짜|작성자|설명
+        * 2022-08-04|이름|
+        */
+
         private void LoadFile (object parameter)
         {
             getAllInfo.GetFileData();

@@ -10,5 +10,6 @@ namespace assignment.Model
     {
         public string filePath;
         public string fileData;
+        public string folderPath;
     }
 }

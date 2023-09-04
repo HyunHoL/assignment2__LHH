@@ -155,6 +155,13 @@ namespace assignment.ViewModel
 
         #region [public Method]
 
+        /**
+        * @brief Die의 좌표에 사각형을 그려 WaferMap을 그리게 해주는 함수
+        * 날짜|작성자|설명
+        * 2023-08-30|이현호|
+        * 2023-09-01|이현호|Rectangle의 Size를 동적으로 변경 가능하게 하는 기능 추가
+        */
+
         public void UpdateSampleTestPlan ()
         {
             Coordinates.Clear();
@@ -172,6 +179,13 @@ namespace assignment.ViewModel
                 Coordinates.Add(saveValue);
             }
         }
+
+        /**
+        * @brief Defect이 있는 Die의 좌표에 사각형을 그려 WaferMap을 그리게 해주는 함수
+        * 날짜|작성자|설명
+        * 2023-08-30|이현호|
+        * 2023-09-01|이현호|Rectangle의 Size를 동적으로 변경 가능하게 하는 기능 추가
+        */
 
         public void UpdateDefectXY()
         {
@@ -195,6 +209,12 @@ namespace assignment.ViewModel
 
         #region [private Method]
 
+        /**
+        * @brief 좌표의 X, Y 최대값을 뽑아주는 함수
+        * 날짜|작성자|설명
+        * 2023-09-01|이현호|
+        */
+
         private Point GetMaxValue()
         {
             Point maxXY = new Point();
@@ -206,6 +226,12 @@ namespace assignment.ViewModel
             maxXY.Y = maxY;
             return maxXY;
         }
+
+        /**
+        * @brief 좌표의 X, Y 최소값을 뽑아주는 함수
+        * 날짜|작성자|설명
+        * 2023-09-01|이현호|
+        */
 
         private Point GetMinValue()
         {
