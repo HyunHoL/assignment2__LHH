@@ -132,6 +132,12 @@ namespace assignment.Model
 
 
         #region [public Method]
+
+        public void LoadFolder()
+        {
+            
+        }
+
         /**
         * @brief 파일을 열고 001 파일의 경로와 001 파일에 들어 있는 정보를 저장하는 함수  
         * @note Patch-notes

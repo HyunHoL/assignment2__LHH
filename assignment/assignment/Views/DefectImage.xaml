@@ -12,27 +12,15 @@
     </UserControl.DataContext>
     
     <Grid>
-        <Image Source="{Binding LoadImage}" >
-            <Image.InputBindings>
-                <MouseBinding Gesture="WheelUp" Command="{Binding ZoomInCommand}" />
-                <MouseBinding Gesture="WheelDown" Command="{Binding ZoomOutCommand}" />
-            </Image.InputBindings>
-            <!--<Image.RenderTransform>
-                <ScaleTransform ScaleX="1" ScaleY="1"/>
+        <Image Source="{Binding LoadImage}" Stretch="Fill">
+            <Image.RenderTransform>
+                <ScaleTransform ScaleX="{Binding ZoomLevel}" ScaleY="{Binding ZoomLevel}"/>
             </Image.RenderTransform>
-            <Image.InputBindings>
-                <MouseBinding Gesture="MouseWheel" Command="{Binding }"/>
-            </Image.InputBindings>
-            <Image.LayoutTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleX="{Binding ZoomFactor}" ScaleY="{Binding ZoomFactor}"/>
-                </TransformGroup>
-            </Image.LayoutTransform>
-            <Image.Style>
-                <Style TargetType="Image">
-                    <Setter Property="Cursor" Value="Hand"/>
-                </Style>
-            </Image.Style>-->
+            <Image.RenderTransformOrigin>
+                <Point>0.5,0.5</Point>
+            </Image.RenderTransformOrigin>
         </Image>
+
+        <Slider VerticalAlignment="Bottom" Maximum="2.0" Minimum="0.1" Value="{Binding ZoomLevel, Mode=TwoWay}" SmallChange="0.1" LargeChange="0.2"/>
     </Grid>
 </UserControl>

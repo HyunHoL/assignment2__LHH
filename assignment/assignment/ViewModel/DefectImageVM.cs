@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace assignment.ViewModel
@@ -13,9 +15,9 @@ namespace assignment.ViewModel
     {
         #region [상수]
 
+        private MainViewModel mainVM;
         private GetAllInfo share;
         private BitmapSource loadImage;
-
         #endregion
 
 
@@ -57,6 +59,7 @@ namespace assignment.ViewModel
                 {
                     loadImage = value;
                     OnPropertyChanged("LoadImage");
+
                 }
             }
         }
@@ -64,15 +67,109 @@ namespace assignment.ViewModel
 
         #endregion
 
+        public MainViewModel MainVM
+        {
+            get { return mainVM; }
+
+            set
+            {
+                if (mainVM != value)
+                {
+                    if (mainVM != null)
+                    {
+                        mainVM.PropertyChanged -= MainViewModel_PropertyChanged;
+                    }
+
+                    mainVM = value;
+
+                    if (mainVM != null)
+                    {
+                        mainVM.PropertyChanged += MainViewModel_PropertyChanged;
+                    }
+
+                    OnPropertyChanged("MainVM");
+                }
+            }
+        }
+
+        private double zoomLevel = 1.0;
+
+        public double ZoomLevel
+        {
+            get { return zoomLevel; }
+            set
+            {
+                if (zoomLevel != value)
+                {
+                    double scaleDifference = Math.Abs(value - zoomLevel);
+
+                    zoomLevel = value;
+                    OnPropertyChanged(nameof(ZoomLevel));
+                }
+            }
+        }
+
+        private double windowWidth;
+
+        public double WindowWidth
+        {
+            get { return windowWidth; }
+
+            set
+            {
+                if (windowWidth != value)
+                {
+                    windowWidth = value;
+                    OnPropertyChanged("WindowWidth");
+                }
+            }
+        }
+
+        private double windowHeight;
+
+        public double WindowHeight
+        {
+            get { return windowHeight; }
+
+            set
+            {
+                if (windowHeight != value)
+                {
+                    windowHeight = value;
+                    OnPropertyChanged("WindowHeight");
+                }
+            }
+        }
+
+        private void ApplyZoom()
+        {
+            if (LoadImage is BitmapSource bitmapSource)
+            {
+                double scaleX = ZoomLevel;
+                double scaleY = ZoomLevel;
+
+                double newWidth = bitmapSource.PixelWidth * scaleX;
+                double newHeight = bitmapSource.PixelHeight * scaleY;
+
+                var transform = new ScaleTransform(scaleX, scaleY);
+                var scaledImage = new TransformedBitmap(LoadImage, transform);
+
+                LoadImage = scaledImage;
+            }
+        }
 
 
         #region [생성자]
 
         public DefectImageVM()
         {
-
+            MainVM = MainViewModel.Instance;
+            mainVM.PropertyChanged += MainViewModel_PropertyChanged;
             share = GetAllInfo.Instance;
             share.PropertyChanged += GetAllInfo_PropertyChanged;
+            WindowWidth = MainViewModel.Instance.ActualWidth / 2;
+            WindowHeight = MainViewModel.Instance.ActualHeight / 2;
+
         }
 
         #endregion
@@ -96,6 +193,7 @@ namespace assignment.ViewModel
             {
                 LoadImage = share.TifValue.imageFile.Frames[share.TifValue.imageNum];
             }
+
         }
 
         #endregion
@@ -103,6 +201,14 @@ namespace assignment.ViewModel
 
 
         #region [private Method]
+
+        private void MainViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "ActualWidth" || e.PropertyName == "ActualHeight")
+            {
+
+            }
+        }
 
         /**
         * @brief GetAllInfo 클래스에서 TifValue의 값이 변경되었을 때, 이벤트를 받아오는 함수  

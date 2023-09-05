@@ -4,6 +4,5 @@
              xmlns:local="clr-namespace:assignment.Views"
              StartupUri="Views/MainView.xaml">
     <Application.Resources>
-         
     </Application.Resources>
 </Application>

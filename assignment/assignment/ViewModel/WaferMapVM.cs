@@ -9,11 +9,38 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace assignment.ViewModel
 {
+    public class PointViewModel : INotifyPropertyChanged
+    {
+        private bool isClicked;
+
+        public Point selectedXY { get; set; }
+
+        public bool IsClicked
+        {
+            get { return isClicked; }
+            set
+            {
+                if (isClicked != value)
+                {
+                    isClicked = value;
+                    OnPropertyChanged("IsClicked");
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
 
     class WaferMapVM : INotifyPropertyChanged
     {
@@ -25,9 +52,31 @@ namespace assignment.ViewModel
         private GetAllInfo share;
         private MainViewModel mainVM;
         private ObservableCollection<Point> coordinates;
-        private ObservableCollection<Point> defectCoordinates;
+        private ObservableCollection<PointViewModel> defectCoordinates;
 
         #endregion
+
+        public ICommand MouseEnterCommand { get; }
+
+        public ICommand ToggleSelectionCommand { get; private set; }
+
+
+        private void ToggleSelection(object parameter)
+        {
+            var target = parameter as PointViewModel;
+            int index = -1;
+            for (int i = 0; i < DefectCoordinates.Count; i++)
+            {
+                if (DefectCoordinates[i].selectedXY == target.selectedXY)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            DefectCoordinates[index].IsClicked = !DefectCoordinates[index].IsClicked;
+            share.TifValue.imageNum = (int)share.DefectList[index].defectID;
+        }
 
         #region [속성]
 
@@ -123,7 +172,7 @@ namespace assignment.ViewModel
             }
         }
 
-        public ObservableCollection<Point> DefectCoordinates
+        public ObservableCollection<PointViewModel> DefectCoordinates
         {
             get { return defectCoordinates; }
 
@@ -137,6 +186,7 @@ namespace assignment.ViewModel
             }
         }
 
+
         #endregion
 
         #region [생성자]
@@ -144,11 +194,12 @@ namespace assignment.ViewModel
         public WaferMapVM()
         {
             Coordinates = new ObservableCollection<Point>();
-            DefectCoordinates = new ObservableCollection<Point>();
+            DefectCoordinates = new ObservableCollection<PointViewModel>();
             Share = GetAllInfo.Instance;
             MainVM = MainViewModel.Instance;
             share.PropertyChanged += GetAllInfo_PropertyChanged;
             mainVM.PropertyChanged += MainViewModel_PropertyChanged;
+            ToggleSelectionCommand = new RelayCommand(ToggleSelection);
         }
 
         #endregion
@@ -198,9 +249,10 @@ namespace assignment.ViewModel
 
             for (int i = 0; i < GetAllInfo.Instance.DefectList.Count; i++)
             {
-                Point saveValue = new Point();
-                saveValue.X = (GetAllInfo.Instance.DefectXY[i].X - MinValue.X) * RectangleWidth + 1;
-                saveValue.Y = (Math.Abs(GetAllInfo.Instance.DefectXY[i].Y - MaxValue.Y) * RectangleHeight) + 1;
+                PointViewModel saveValue = new PointViewModel();
+                saveValue.selectedXY = new Point{ X = (GetAllInfo.Instance.DefectXY[i].X - MinValue.X) * RectangleWidth + 1, Y = Math.Abs(GetAllInfo.Instance.DefectXY[i].Y - MaxValue.Y) * RectangleHeight +1 };
+                saveValue.IsClicked = false;
+                //saveValue.selectedXY.Y = (Math.Abs(GetAllInfo.Instance.DefectXY[i].Y - MaxValue.Y) * RectangleHeight) + 1;
                 DefectCoordinates.Add(saveValue);
             }
         }

@@ -13,11 +13,6 @@
     </UserControl.DataContext>
 
     <Grid>
-
-        <!--<i:Interaction.Behaviors>
-            <converters:GetSize Width="{Binding ActualWidth, Mode=TwoWay}" Height="{Binding ActualHeight, Mode=TwoWay}"/>
-        </i:Interaction.Behaviors>-->
-        
         <Canvas Background="Black">
             <ItemsControl ItemsSource="{Binding Coordinates}">
                 <ItemsControl.ItemsPanel>
@@ -38,17 +33,22 @@
                             Height="{Binding Path=DataContext.RectangleHeight, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
                             Fill="#FFD2D2D2" Stroke="Black" StrokeThickness="1">
                             <Rectangle.ToolTip>
-                                <ToolTip Content="{Binding Coordinate, StringFormat='X: {0}, Y: {1}'}"/>
+                                <ToolTip>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="X={0}, Y={1}">
+                                                <Binding Path="X"/>
+                                                <Binding Path="Y"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </ToolTip>
                             </Rectangle.ToolTip>
-                            <Rectangle.InputBindings>
-                                <MouseBinding Gesture="LeftClick"
-                                              Command="{Binding YourCustomCommand}"/>
-                            </Rectangle.InputBindings>
                         </Rectangle>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            
+
             <ItemsControl ItemsSource="{Binding DefectCoordinates}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -57,8 +57,8 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemContainerStyle>
                     <Style TargetType="ContentPresenter">
-                        <Setter Property="Canvas.Left" Value="{Binding X}" />
-                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                        <Setter Property="Canvas.Left" Value="{Binding selectedXY.X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding selectedXY.Y}" />
                     </Style>
                 </ItemsControl.ItemContainerStyle>
                 <ItemsControl.ItemTemplate>
@@ -66,7 +66,37 @@
                         <Rectangle 
                             Width="{Binding Path=DataContext.RectangleWidth, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                             Height="{Binding Path=DataContext.RectangleHeight, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
-                            Fill="#FFFF1E1E" Stroke="Black" StrokeThickness="1"/>
+                            Fill="#FFFF1E1E">
+                            <Rectangle.InputBindings>
+                                <MouseBinding Gesture="LeftClick" Command="{Binding Path=DataContext.ToggleSelectionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" />
+                            </Rectangle.InputBindings>
+                            <Rectangle.Style>
+                                <Style TargetType="Rectangle">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsClicked}" Value="True">
+                                            <Setter Property="Stroke" Value="Blue"/>
+                                            <Setter Property="StrokeThickness" Value="2"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsClicked}" Value="False">
+                                            <Setter Property="Stroke" Value="Black"/>
+                                            <Setter Property="StrokeThickness" Value="1"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Rectangle.Style>
+                            <Rectangle.ToolTip>
+                                <ToolTip>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="X={0}, Y={1}">
+                                                <Binding Path="selectedXY.X"/>
+                                                <Binding Path="selectedXY.Y"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </ToolTip>
+                            </Rectangle.ToolTip>
+                        </Rectangle>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

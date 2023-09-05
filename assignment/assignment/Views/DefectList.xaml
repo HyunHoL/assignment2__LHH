@@ -27,7 +27,18 @@
         <ListView ItemsSource="{Binding DefectValue}" SelectedItem="{Binding SelectedDefectList}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,225,0,0">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="50" DisplayMemberBinding="{Binding DisplayNullText}"/>
+                    <GridViewColumn Header="" Width="50">
+                        <GridViewColumn.HeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </Style>
+                        </GridViewColumn.HeaderContainerStyle>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="DEFECTID" Width="100" DisplayMemberBinding="{Binding defectID}"/>
                     <GridViewColumn Header="XREL" Width="100 " DisplayMemberBinding="{Binding xrel}"/>
                     <GridViewColumn Header="YREL" Width="100" DisplayMemberBinding="{Binding yrel}"/>
