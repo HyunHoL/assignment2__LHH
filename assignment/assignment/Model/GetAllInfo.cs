@@ -165,6 +165,7 @@ namespace assignment.Model
                 Instance.FileValue.fileData = File.ReadAllText(FileValue.filePath);
             }
 
+            GetDefectCount();
             ReadWaferInfo();
             GetDefectList();
             GetTifData();
@@ -213,6 +214,9 @@ namespace assignment.Model
                     saveValue.X = value1;
                     saveValue.Y = value2;
                     newWafer.sampleTestPlan.Add(saveValue);
+                    newWafer.dieNum.Add(i);
+                    newWafer.dieNumIndex = 0;
+                    newWafer.displayValue = 0;
                 }
             }
             Instance.Wafer = newWafer;
@@ -249,10 +253,21 @@ namespace assignment.Model
 
                 AddInfo(values, saveValue);
                 newDefectList.Add(saveValue);
-                newDefectXY.Add(new Point { X = saveValue.defectXY.X, Y = saveValue.defectXY.Y });
+                newDefectXY.Add(new Point { X = saveValue.defectXY.X, Y = saveValue.defectXY.Y });                
             }
             Instance.DefectList = newDefectList;
             Instance.DefectXY = newDefectXY;
+        }
+
+        public void GetDefectCount()
+        {
+            for (int i = 0; i < Wafer.sampleTestPlan.Count; i++)
+            {
+                Point targetPoint = Wafer.sampleTestPlan[i];
+                int count = DefectXY.Count(p => p.X == targetPoint.X && p.Y == targetPoint.Y);
+                Instance.Wafer.defectCount.Add(count);
+                Instance.Wafer.defectCountIndex = 1;
+            }
         }
 
         /**

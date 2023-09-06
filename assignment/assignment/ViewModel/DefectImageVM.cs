@@ -15,9 +15,11 @@ namespace assignment.ViewModel
     {
         #region [상수]
 
-        private MainViewModel mainVM;
         private GetAllInfo share;
         private BitmapSource loadImage;
+        private PointViewModel pointVM;
+        private MainViewModel mainVM;
+
         #endregion
 
 
@@ -67,27 +69,27 @@ namespace assignment.ViewModel
 
         #endregion
 
-        public MainViewModel MainVM
+        public PointViewModel PointVM
         {
-            get { return mainVM; }
+            get { return pointVM; }
 
             set
             {
-                if (mainVM != value)
+                if (pointVM != value)
                 {
-                    if (mainVM != null)
+                    if (pointVM != null)
                     {
-                        mainVM.PropertyChanged -= MainViewModel_PropertyChanged;
+                        pointVM.PropertyChanged -= PointViewModel_PropertyChanged;
                     }
 
-                    mainVM = value;
+                    pointVM = value;
 
-                    if (mainVM != null)
+                    if (pointVM != null)
                     {
-                        mainVM.PropertyChanged += MainViewModel_PropertyChanged;
+                        pointVM.PropertyChanged += PointViewModel_PropertyChanged;
                     }
 
-                    OnPropertyChanged("MainVM");
+                    OnPropertyChanged("PointVM");
                 }
             }
         }
@@ -141,35 +143,43 @@ namespace assignment.ViewModel
             }
         }
 
-        private void ApplyZoom()
+        public MainViewModel MainVM
         {
-            if (LoadImage is BitmapSource bitmapSource)
+            get { return mainVM; }
+
+            set
             {
-                double scaleX = ZoomLevel;
-                double scaleY = ZoomLevel;
+                if (mainVM != value)
+                {
+                    if (mainVM != null)
+                    {
+                        mainVM.PropertyChanged -= MainViewModel_PropertyChanged;
+                    }
 
-                double newWidth = bitmapSource.PixelWidth * scaleX;
-                double newHeight = bitmapSource.PixelHeight * scaleY;
+                    mainVM = value;
 
-                var transform = new ScaleTransform(scaleX, scaleY);
-                var scaledImage = new TransformedBitmap(LoadImage, transform);
+                    if (mainVM != null)
+                    {
+                        mainVM.PropertyChanged += MainViewModel_PropertyChanged;
+                    }
 
-                LoadImage = scaledImage;
+                    OnPropertyChanged("MainVM");
+                }
             }
         }
-
 
         #region [생성자]
 
         public DefectImageVM()
         {
-            MainVM = MainViewModel.Instance;
-            mainVM.PropertyChanged += MainViewModel_PropertyChanged;
             share = GetAllInfo.Instance;
             share.PropertyChanged += GetAllInfo_PropertyChanged;
             WindowWidth = MainViewModel.Instance.ActualWidth / 2;
             WindowHeight = MainViewModel.Instance.ActualHeight / 2;
-
+            PointVM = PointViewModel.Instance;
+            PointVM.PropertyChanged += PointViewModel_PropertyChanged;
+            MainVM = MainViewModel.Instance;
+            mainVM.PropertyChanged += MainViewModel_PropertyChanged;
         }
 
         #endregion
@@ -186,14 +196,17 @@ namespace assignment.ViewModel
 
         public void AddImage()
         {
-            if (share.TifValue.imageNum != 0) 
+            if (share.TifValue.imageNum != 0)
+            {
                 LoadImage = share.TifValue.imageFile.Frames[share.TifValue.imageNum - 1];
+            }
 
             else
             {
                 LoadImage = share.TifValue.imageFile.Frames[share.TifValue.imageNum];
             }
-
+            WindowWidth = MainViewModel.Instance.ActualWidth / 2;
+            WindowHeight = MainViewModel.Instance.ActualHeight / 2;
         }
 
         #endregion
@@ -202,11 +215,11 @@ namespace assignment.ViewModel
 
         #region [private Method]
 
-        private void MainViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void PointViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "ActualWidth" || e.PropertyName == "ActualHeight")
+            if (e.PropertyName == "IsClicked")
             {
-
+                AddImage();
             }
         }
 
@@ -219,6 +232,14 @@ namespace assignment.ViewModel
         private void GetAllInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "TifValue")
+            {
+                AddImage();
+            }
+        }
+
+        private void MainViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "ActualWidth" || e.PropertyName == "ActualHeight")
             {
                 AddImage();
             }

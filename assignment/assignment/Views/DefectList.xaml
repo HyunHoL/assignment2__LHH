@@ -60,9 +60,19 @@
             </ListView.View>
         </ListView>
         <Button Content="◀" 
-                Command="{Binding DecreaseNum}"
+                Command="{Binding DecreaseDefectNum}"
                 CommandParameter="-1" HorizontalAlignment="Left" BorderBrush="White"  Background="White" VerticalAlignment="Top" Margin="326,176,0,0"/>
-        <Button Content="▶" Command="{Binding IncreaseNum}" CommandParameter="1" HorizontalAlignment="Left" BorderBrush="White" Background="White" VerticalAlignment="Top" Margin="626,176,0,0"/>
+        <Button Content="▶" Command="{Binding IncreaseDefectNum}" CommandParameter="1" HorizontalAlignment="Left" BorderBrush="White" Background="White" VerticalAlignment="Top" Margin="626,176,0,0"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding DefectListNum}" VerticalAlignment="Top" Margin="466,176,0,0"/>
+        <Button Content="◀" 
+            Command="{Binding DecreaseDefectNum}"
+            CommandParameter="-1" HorizontalAlignment="Left" BorderBrush="White"  Background="White" VerticalAlignment="Top" Margin="326,99,0,0"/>
+        <Button Content="▶" Command="{Binding IncreaseDefectNum}" CommandParameter="1" HorizontalAlignment="Left" BorderBrush="White" Background="White" VerticalAlignment="Top" Margin="626,99,0,0"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding DefectCount}" VerticalAlignment="Top" Margin="466,99,0,0"/>
+        <Button Content="◀" 
+            Command="{Binding DecreaseDefectNum}"
+            CommandParameter="-1" HorizontalAlignment="Left" BorderBrush="White"  Background="White" VerticalAlignment="Top" Margin="326,22,0,0"/>
+        <Button Content="▶" Command="{Binding IncreaseDefectNum}" CommandParameter="1" HorizontalAlignment="Left" BorderBrush="White" Background="White" VerticalAlignment="Top" Margin="626,22,0,0"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding DieNum}" VerticalAlignment="Top" Margin="466,22,0,0"/>
     </Grid>
 </UserControl>

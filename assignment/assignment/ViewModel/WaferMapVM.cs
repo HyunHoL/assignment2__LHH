@@ -17,7 +17,21 @@ namespace assignment.ViewModel
 {
     public class PointViewModel : INotifyPropertyChanged
     {
+
+        private static PointViewModel instance = null;
         private bool isClicked;
+
+        public static PointViewModel Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new PointViewModel();
+                }
+                return instance;
+            }
+        }
 
         public Point selectedXY { get; set; }
 
@@ -51,6 +65,8 @@ namespace assignment.ViewModel
         private double rectangleHeight;
         private GetAllInfo share;
         private MainViewModel mainVM;
+        private PointViewModel pointVM;
+        private DefectListVM defectVM;
         private ObservableCollection<Point> coordinates;
         private ObservableCollection<PointViewModel> defectCoordinates;
 
@@ -70,12 +86,25 @@ namespace assignment.ViewModel
                 if (DefectCoordinates[i].selectedXY == target.selectedXY)
                 {
                     index = i;
-                    break;
                 }
             }
 
+            GetAllInfo.Instance.TifValue.imageNum = (int)GetAllInfo.Instance.DefectList[index].defectID;
+
+            if (PointVM.IsClicked != DefectCoordinates[index].IsClicked)
+            {
+                PointVM.IsClicked = !PointVM.IsClicked;
+            }
+
+            PointVM.IsClicked = !DefectCoordinates[index].IsClicked;
+
+            for (int j = 0; j < DefectCoordinates.Count; j++)
+            {
+                if (DefectCoordinates[j].IsClicked == true)
+                    DefectCoordinates[j].IsClicked = false;
+            }
+
             DefectCoordinates[index].IsClicked = !DefectCoordinates[index].IsClicked;
-            share.TifValue.imageNum = (int)share.DefectList[index].defectID;
         }
 
         #region [속성]
@@ -185,7 +214,34 @@ namespace assignment.ViewModel
                 }
             }
         }
+        
+        public PointViewModel PointVM
+        {
+            get { return pointVM; }
 
+            set
+            {
+                if (pointVM != value)
+                {
+                    pointVM = value;
+                    OnPropertyChanged("PointVM");
+                }
+            }
+        }
+
+        public DefectListVM DefectVM
+        {
+            get { return defectVM; }
+
+            set
+            {
+                if (defectVM != value)
+                {
+                    defectVM = value;
+                    OnPropertyChanged("DefectVM");
+                }
+            }
+        }
 
         #endregion
 
@@ -197,8 +253,11 @@ namespace assignment.ViewModel
             DefectCoordinates = new ObservableCollection<PointViewModel>();
             Share = GetAllInfo.Instance;
             MainVM = MainViewModel.Instance;
+            PointVM = PointViewModel.Instance;
+            DefectVM = DefectListVM.Instance;
             share.PropertyChanged += GetAllInfo_PropertyChanged;
             mainVM.PropertyChanged += MainViewModel_PropertyChanged;
+            defectVM.PropertyChanged += DefectListVM_PropertyChanged;
             ToggleSelectionCommand = new RelayCommand(ToggleSelection);
         }
 
@@ -316,6 +375,67 @@ namespace assignment.ViewModel
             {
                 UpdateSampleTestPlan();
                 UpdateDefectXY();
+            }
+        }
+
+        private void DefectListVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "SaveCoordinate")
+            {
+                Point target = new Point();
+                Point MaxValue = GetMaxValue();
+                Point MinValue = GetMinValue();
+                target = DefectListVM.Instance.SaveCoordinate;
+                target.X = (target.X - MinValue.X) * RectangleWidth + 1;
+                target.Y = Math.Abs((target.Y - MaxValue.Y) * RectangleHeight) + 1;
+
+                int index = -1;
+
+                for (int i = 0; i < DefectCoordinates.Count; i++)
+                {
+
+                    if (DefectCoordinates[i].selectedXY == target)
+                    {
+
+                        if (DefectCoordinates[i + 3].selectedXY == target)
+                        {
+                            index = i + 3;
+                            break;
+                        }
+
+                        if (DefectCoordinates[i + 2].selectedXY == target)
+                        {
+                            index = i + 2;
+                            break;
+                        }
+
+                        if (DefectCoordinates[i + 1].selectedXY == target)
+                        {
+                            index = i + 1;
+                            break;
+                        }
+
+                        index = i;
+                        break;
+                    }
+                }
+
+                GetAllInfo.Instance.TifValue.imageNum = (int)GetAllInfo.Instance.DefectList[index].defectID;
+
+                if (PointVM.IsClicked != DefectCoordinates[index].IsClicked)
+                {
+                    PointVM.IsClicked = !PointVM.IsClicked;
+                }
+
+                PointVM.IsClicked = !DefectCoordinates[index].IsClicked;
+
+                for (int j = 0; j < DefectCoordinates.Count; j++)
+                {
+                    if (DefectCoordinates[j].IsClicked == true)
+                        DefectCoordinates[j].IsClicked = false;
+                }
+
+                DefectCoordinates[index].IsClicked = !DefectCoordinates[index].IsClicked;
             }
         }
 
