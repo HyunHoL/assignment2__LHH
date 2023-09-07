@@ -21,6 +21,7 @@ namespace assignment.ViewModel
         private ObservableCollection<DefectInfo> defectValue;
         private PointViewModel pointVM;
         private Point saveCoordinate;
+        private int saveIndex;
 
         #endregion
 
@@ -29,6 +30,10 @@ namespace assignment.ViewModel
 
         public ICommand IncreaseDefectNum { get; }
         public ICommand DecreaseDefectNum { get; }
+        public ICommand IncreaseDieNum { get; }
+        public ICommand DecreaseDieNum { get; }
+        public ICommand IncreaseDefectCount { get; }
+        public ICommand DecreaseDefectCount { get; }
         public static DefectListVM Instance
         {
             get
@@ -62,6 +67,34 @@ namespace assignment.ViewModel
                     saveNum.filePath = share.TifValue.filePath;
                     Instance.SaveCoordinate = selectedDefectList.defectXY;
                     share.TifValue = saveNum;
+                    Point target = share.DefectXY[share.TifValue.imageNum - 1];
+
+                    for (int i = 0; i < share.Wafer.sampleTestPlan.Count; i++)
+                    {
+                        if (share.Wafer.sampleTestPlan[i] == target)
+                        {
+                            share.Wafer.dieNumIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (share.Wafer.defectCount[share.Wafer.dieNumIndex] == 0)
+                    {
+                        share.Wafer.displayValue = 0;
+                    }
+
+                    else if (share.Wafer.dieNumIndex == saveIndex)
+                    {
+                        share.Wafer.displayValue += 1;
+                    }
+
+                    else
+                    {
+                        share.Wafer.displayValue = 1;
+                    }
+
+                    DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
+                    DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
                     DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
                     OnPropertyChanged("SelectedDefectList");
                 }
@@ -268,10 +301,14 @@ namespace assignment.ViewModel
             DefectValue = new ObservableCollection<DefectInfo>();
             share = GetAllInfo.Instance;
             share.PropertyChanged += GetAllInfo_PropertyChanged;
-            IncreaseDefectNum = new RelayCommand(UpDefectNumber);
-            DecreaseDefectNum = new RelayCommand(DownDefectNumber);
+            IncreaseDefectNum = new RelayCommand<object>(UpDefectNumber);
+            DecreaseDefectNum = new RelayCommand<object>(DownDefectNumber);
             PointVM = PointViewModel.Instance;
             PointVM.PropertyChanged += PointViewModel_PropertyChanged;
+            IncreaseDieNum = new RelayCommand<object>(UpDieNum);
+            DecreaseDieNum = new RelayCommand<object>(DownDieNum);
+            IncreaseDefectCount = new RelayCommand<object>(UpDefectCount);
+            DecreaseDefectCount = new RelayCommand<object>(DownDefectCount);
         }
 
         #endregion
@@ -288,18 +325,30 @@ namespace assignment.ViewModel
         public void AddValue()
         {
             DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
-            
-            if (share.Wafer.defectCount[share.Wafer.defectCountIndex] == 0)
+
+            Point target = share.DefectXY[share.TifValue.imageNum - 1];
+
+            for (int i = 0; i < share.Wafer.sampleTestPlan.Count; i++)
             {
-                DefectCount = 0 + " / " + 0;
+                if (share.Wafer.sampleTestPlan[i] == target)
+                {
+                    share.Wafer.dieNumIndex = i;
+                    break;
+                }
+            }
+
+            if (share.Wafer.defectCount[share.Wafer.dieNumIndex] == 0)
+            {
+                share.Wafer.displayValue = 0;
             }
 
             else
             {
-                share.Wafer.displayValue += 1;
-                DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.defectCountIndex];
+                share.Wafer.displayValue = 1;
             }
 
+            DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
+            DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
             DisplayNullText = "";
             DisplayWaferID = "WaferID : " + share.Wafer.waferID;
             DisplayLotID = "LotID : " + share.Wafer.lotID;
@@ -320,25 +369,181 @@ namespace assignment.ViewModel
         * 2022-09-04|이현호|
         */
 
-        public void UpDefectNumber(object paramerter)
+        public void UpDefectNumber(object parameter)
         {
-            int saveValue = int.Parse((string)paramerter);
+            int saveValue = int.Parse((string)parameter);
             TifFileInfo saveNum = new TifFileInfo();
+
+            if (share.TifValue.imageNum == share.DefectList.Count)
+            {
+                return;
+            }
 
             if (share.TifValue.imageNum == 0)
             {
                 share.TifValue.imageNum += 1;
             }
 
-            else if (share.TifValue.imageNum == share.DefectList.Count)
-            {
-                share.TifValue.imageNum = 0;
-            }
-
             saveNum.imageNum = share.TifValue.imageNum + saveValue;
             saveNum.imageFile = share.TifValue.imageFile;
             saveNum.filePath = share.TifValue.filePath;
             share.TifValue = saveNum;
+
+            Point target = share.DefectXY[share.TifValue.imageNum - 1];
+
+            for (int i = 0; i < share.Wafer.sampleTestPlan.Count; i++)
+            {
+                if (share.Wafer.sampleTestPlan[i] == target)
+                {
+                    share.Wafer.dieNumIndex = i;
+                    break;
+                }
+            }
+
+            if (share.Wafer.defectCount[share.Wafer.dieNumIndex] == 0)
+            {
+                share.Wafer.displayValue = 0;
+            }
+
+            else if (share.Wafer.dieNumIndex == saveIndex)
+            {
+                share.Wafer.displayValue += 1;
+            }
+
+            else
+            {
+                share.Wafer.displayValue = 1;
+            }
+
+            saveIndex = share.Wafer.dieNumIndex;
+            DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
+            DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
+            DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
+        }
+
+        public void UpDefectCount(object parameter)
+        {
+            if (share.Wafer.displayValue == share.Wafer.defectCount[share.Wafer.dieNumIndex])
+            {
+                return;
+            }
+
+            if (share.Wafer.defectCount[share.Wafer.dieNumIndex] == 0)
+            {
+                share.Wafer.displayValue = 0;
+            }
+
+            share.Wafer.displayValue += int.Parse((string)parameter);
+            TifFileInfo saveNum = new TifFileInfo();
+            saveNum.imageNum = share.TifValue.imageNum + int.Parse((string)parameter);
+            saveNum.imageFile = share.TifValue.imageFile;
+            saveNum.filePath = share.TifValue.filePath;
+            share.TifValue = saveNum;
+
+            DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
+            DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
+            DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
+        }
+
+        public void UpDieNum (object parameter)
+        {
+            if (share.Wafer.dieNumIndex == share.Wafer.sampleTestPlan.Count)
+            {
+                return;
+            }
+
+            int saveValue = int.Parse((string)parameter);
+            share.Wafer.dieNumIndex += saveValue;
+            TifFileInfo saveNum = new TifFileInfo();
+
+            if (share.Wafer.defectCount[share.Wafer.dieNumIndex] == 0)
+            {
+                share.Wafer.displayValue = 0;
+            }
+
+            else
+            {
+                Point target = share.Wafer.sampleTestPlan[share.Wafer.dieNumIndex];
+                share.Wafer.displayValue = 1;
+
+                for (int i = 0; i < share.DefectXY.Count; i++)
+                {
+                    if (target == share.DefectXY[i])
+                    {
+                        saveNum.imageNum = i;
+                        saveNum.imageFile = share.TifValue.imageFile;
+                        saveNum.filePath = share.TifValue.filePath;
+                        share.TifValue = saveNum;
+                        break;
+                    }
+                }
+            }
+
+            DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
+            DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
+            DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
+        }
+
+        public void DownDieNum (object parameter)
+        {
+            if (share.Wafer.dieNumIndex == 1)
+            {
+                return;
+            }
+
+            int saveValue = int.Parse((string)parameter);
+            share.Wafer.dieNumIndex += saveValue;
+            TifFileInfo saveNum = new TifFileInfo();
+
+            if (share.Wafer.defectCount[share.Wafer.dieNumIndex] == 0)
+            {
+                share.Wafer.displayValue = 0;
+            }
+
+            else
+            {
+                Point target = share.Wafer.sampleTestPlan[share.Wafer.dieNumIndex];
+                share.Wafer.displayValue = 1;
+
+                for (int i = 0; i < share.DefectXY.Count; i++)
+                {
+                    if (target == share.DefectXY[i])
+                    {
+                        saveNum.imageNum = i;
+                        saveNum.imageFile = share.TifValue.imageFile;
+                        saveNum.filePath = share.TifValue.filePath;
+                        share.TifValue = saveNum;
+                        break;
+                    }
+                }
+            }
+
+            DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
+            DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
+            DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
+        }
+
+        public void DownDefectCount(object parameter)
+        {
+            if (share.Wafer.displayValue == 1 || share.Wafer.displayValue == 0)
+            {
+                return;
+            }
+
+            if (share.Wafer.defectCount[share.Wafer.dieNumIndex] == 0)
+            {
+                share.Wafer.displayValue = 0;
+            }
+
+            share.Wafer.displayValue += int.Parse((string)parameter);
+            TifFileInfo saveNum = new TifFileInfo();
+            saveNum.imageNum = share.TifValue.imageNum + int.Parse((string)parameter);
+            saveNum.imageFile = share.TifValue.imageFile;
+            saveNum.filePath = share.TifValue.filePath;
+            share.TifValue = saveNum;
+
+            DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
+            DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
             DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
         }
 
@@ -353,43 +558,40 @@ namespace assignment.ViewModel
             int saveValue = int.Parse((string)parameter);
             TifFileInfo saveNum = new TifFileInfo();
 
-            if (share.TifValue.imageNum == 0 || share.TifValue.imageNum == 1)
+            if (share.TifValue.imageNum == 1)
             {
-                share.TifValue.imageNum = share.DefectList.Count + 1;
-            }
-
-            saveNum.imageNum = share.TifValue.imageNum + saveValue;
-            saveNum.imageFile = share.TifValue.imageFile;
-            saveNum.filePath = share.TifValue.filePath;
-            share.TifValue = saveNum;
-            DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
-        }
-
-        public void UpDefectCount (object parameter)
-        {
-            int saveValue = (int)parameter;
-
-            if (share.Wafer.defectCount[share.Wafer.defectCountIndex] == 0)
-            {
-                share.Wafer.displayValue = 0;
                 return;
             }
-
-            share.Wafer.displayValue += saveValue;
-
-            TifFileInfo saveNum = new TifFileInfo();
-
-            if (share.TifValue.imageNum == 0 || share.TifValue.imageNum == 1)
-            {
-                share.TifValue.imageNum = share.DefectList.Count + 1;
-            }
-
+            
             saveNum.imageNum = share.TifValue.imageNum + saveValue;
             saveNum.imageFile = share.TifValue.imageFile;
             saveNum.filePath = share.TifValue.filePath;
             share.TifValue = saveNum;
 
-            DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.defectCountIndex];
+            Point target = share.DefectXY[share.TifValue.imageNum - 1];
+
+            for (int i = 0; i < share.Wafer.sampleTestPlan.Count; i++)
+            {
+                if (share.Wafer.sampleTestPlan[i] == target)
+                {
+                    share.Wafer.dieNumIndex = i;
+                    break;
+                }
+            }
+
+            if (share.Wafer.defectCount[share.Wafer.dieNumIndex] == 0)
+            {
+                share.Wafer.displayValue = 0;
+            }
+
+            else
+            {
+                share.Wafer.displayValue = 1;
+            }
+
+            DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
+            DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
+            DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
         }
 
         #endregion
@@ -409,6 +611,29 @@ namespace assignment.ViewModel
             if (e.PropertyName == "IsClicked")
             {
                 DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
+                Point target = share.DefectXY[share.TifValue.imageNum - 1];
+
+                for (int i = 0; i < share.Wafer.sampleTestPlan.Count; i++)
+                {
+                    if (share.Wafer.sampleTestPlan[i] == target)
+                    {
+                        share.Wafer.dieNumIndex = i;
+                        break;
+                    }
+                }
+
+                if (share.Wafer.defectCount[share.Wafer.dieNumIndex] == 0)
+                {
+                    share.Wafer.displayValue = 0;
+                }
+
+                else
+                {
+                    share.Wafer.displayValue = 1;
+                }
+
+                DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
+                DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
             }
         }
 

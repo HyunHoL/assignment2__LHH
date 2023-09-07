@@ -13,7 +13,15 @@
     </UserControl.DataContext>
     
     <Grid>
-        <Image Source="{Binding LoadImage}" Stretch="Fill">
+        <Image x:Name="image" Source="{Binding LoadImage}" Stretch="Fill">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonDown">
+                    <i:InvokeCommandAction Command="{Binding MouseLeftButtonDownCommand}" CommandParameter="{Binding }"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseLeftButtonUp">
+                    <i:InvokeCommandAction Command="{Binding MouseLeftButtonUpCommand}" CommandParameter="{Binding }"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <Image.RenderTransform>
                 <ScaleTransform ScaleX="{Binding ZoomLevel}" ScaleY="{Binding ZoomLevel}"/>
             </Image.RenderTransform>
@@ -22,6 +30,6 @@
             </Image.RenderTransformOrigin>
         </Image>
 
-        <Slider VerticalAlignment="Bottom" Maximum="2.0" Minimum="0.1" Value="{Binding ZoomLevel, Mode=TwoWay}" SmallChange="0.1" LargeChange="0.2" Margin="0,0,0,28"/>
+        <Slider VerticalAlignment="Bottom" Maximum="2.0" Minimum="0.5" Value="{Binding ZoomLevel, Mode=TwoWay}" Width="300" SmallChange="0.1" LargeChange="0.2" Margin="0,0,0,28"/>
     </Grid>
 </UserControl>

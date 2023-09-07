@@ -46,7 +46,7 @@ namespace assignment.ViewModel
         public OpenFileVM()
         {
             getAllInfo = GetAllInfo.Instance;
-            OpenFileCommand = new RelayCommand(LoadFile);
+            OpenFileCommand = new RelayCommand<object>(LoadFile);
         }
 
         #endregion

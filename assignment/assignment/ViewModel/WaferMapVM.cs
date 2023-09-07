@@ -258,7 +258,7 @@ namespace assignment.ViewModel
             share.PropertyChanged += GetAllInfo_PropertyChanged;
             mainVM.PropertyChanged += MainViewModel_PropertyChanged;
             defectVM.PropertyChanged += DefectListVM_PropertyChanged;
-            ToggleSelectionCommand = new RelayCommand(ToggleSelection);
+            ToggleSelectionCommand = new RelayCommand<object>(ToggleSelection);
         }
 
         #endregion
@@ -363,7 +363,7 @@ namespace assignment.ViewModel
                 UpdateSampleTestPlan();
             }
 
-            else if (e.PropertyName == "DefectXY")
+            else if (e.PropertyName == "DefectList")
             {
                 UpdateDefectXY();
             }
@@ -396,20 +396,25 @@ namespace assignment.ViewModel
 
                     if (DefectCoordinates[i].selectedXY == target)
                     {
+                        if (i + 3 >= DefectCoordinates.Count)
+                        {
+                            index = i;
+                            break;
+                        }
 
-                        if (DefectCoordinates[i + 3].selectedXY == target)
+                        else if (DefectCoordinates[i + 3].selectedXY == target)
                         {
                             index = i + 3;
                             break;
                         }
 
-                        if (DefectCoordinates[i + 2].selectedXY == target)
+                        else if (DefectCoordinates[i + 2].selectedXY == target)
                         {
                             index = i + 2;
                             break;
                         }
 
-                        if (DefectCoordinates[i + 1].selectedXY == target)
+                        else if (DefectCoordinates[i + 1].selectedXY == target)
                         {
                             index = i + 1;
                             break;

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -20,9 +21,13 @@ namespace assignment.ViewModel
         private PointViewModel pointVM;
         private MainViewModel mainVM;
 
+        private Point startPoint;
+        private Point endPoint;
+
         #endregion
 
-
+        public ICommand MouseLeftButtonDownCommand { get; }
+        public ICommand MouseLeftButtonUpCommand { get; }
 
         #region [속성]
 
@@ -168,6 +173,28 @@ namespace assignment.ViewModel
             }
         }
 
+        public Point StartPoint
+        {
+            get { return startPoint; }
+
+            set
+            {
+                startPoint = value;
+                OnPropertyChanged("StartPoint");
+            }
+        }
+
+        public Point EndPoint
+        {
+            get { return endPoint; }
+
+            set
+            {
+                endPoint = value;
+                OnPropertyChanged("EndPoint");
+            }
+        }
+
         #region [생성자]
 
         public DefectImageVM()
@@ -180,13 +207,23 @@ namespace assignment.ViewModel
             PointVM.PropertyChanged += PointViewModel_PropertyChanged;
             MainVM = MainViewModel.Instance;
             mainVM.PropertyChanged += MainViewModel_PropertyChanged;
+            MouseLeftButtonDownCommand = new RelayCommand<MouseButtonEventArgs>(MouseLeftButtonDown);
+            MouseLeftButtonUpCommand = new RelayCommand<MouseButtonEventArgs>(MouseLeftButtonUp);
         }
 
         #endregion
 
-
-
         #region [public Method]
+
+        public void MouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            Point clickPoint = e.GetPosition((IInputElement)e.Source);
+        }
+
+        public void MouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            Point clickPoint = e.GetPosition((IInputElement)e.Source);
+        }
 
         /**
         * @brief 이미지 번호에 맞게 이미지를 출력해주는 함수  

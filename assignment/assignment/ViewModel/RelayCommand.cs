@@ -1,44 +1,43 @@
 ﻿using System;
 using System.Windows.Input;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace assignment.ViewModel
+public class RelayCommand<T> : ICommand
 {
-    public class RelayCommand : ICommand
+    private readonly Action<T> _execute;
+    private readonly Func<T, bool> _canExecute;
+
+    public RelayCommand(Action<T> execute, Func<T, bool> canExecute = null)
     {
-        private readonly Action<object> _execute;
-        private readonly Func<object, bool> _canExecute;
-        private Action toggleListViewVisibility;
+        _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+        _canExecute = canExecute;
+    }
 
-        public RelayCommand(Action toggleListViewVisibility)
+    public bool CanExecute(object parameter)
+    {
+        if (_canExecute == null)
         {
-            this.toggleListViewVisibility = toggleListViewVisibility;
+            return true;
         }
 
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        if (parameter == null && typeof(T).IsValueType)
         {
-            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            _canExecute = canExecute;
+            return _canExecute(default(T));
         }
 
-        public event EventHandler CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
-        }
+        return _canExecute((T)parameter);
+    }
 
-        public bool CanExecute(object parameter)
+    public void Execute(object parameter)
+    {
+        if (CanExecute(parameter))
         {
-            return _canExecute == null || _canExecute(parameter);
-        }
-
-        public void Execute(object parameter)
-        {
-            _execute(parameter);
+            _execute((T)parameter);
         }
     }
-}
 
+    public event EventHandler CanExecuteChanged
+    {
+        add => CommandManager.RequerySuggested += value;
+        remove => CommandManager.RequerySuggested -= value;
+    }
+}

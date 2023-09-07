@@ -133,11 +133,6 @@ namespace assignment.Model
 
         #region [public Method]
 
-        public void LoadFolder()
-        {
-            
-        }
-
         /**
         * @brief 파일을 열고 001 파일의 경로와 001 파일에 들어 있는 정보를 저장하는 함수  
         * @note Patch-notes
@@ -165,7 +160,6 @@ namespace assignment.Model
                 Instance.FileValue.fileData = File.ReadAllText(FileValue.filePath);
             }
 
-            GetDefectCount();
             ReadWaferInfo();
             GetDefectList();
             GetTifData();
@@ -214,9 +208,8 @@ namespace assignment.Model
                     saveValue.X = value1;
                     saveValue.Y = value2;
                     newWafer.sampleTestPlan.Add(saveValue);
-                    newWafer.dieNum.Add(i);
-                    newWafer.dieNumIndex = 0;
-                    newWafer.displayValue = 0;
+                    newWafer.dieNumIndex = 1;
+                    newWafer.displayValue = 1;
                 }
             }
             Instance.Wafer = newWafer;
@@ -255,18 +248,18 @@ namespace assignment.Model
                 newDefectList.Add(saveValue);
                 newDefectXY.Add(new Point { X = saveValue.defectXY.X, Y = saveValue.defectXY.Y });                
             }
-            Instance.DefectList = newDefectList;
+            GetDefectCount(newDefectXY);
             Instance.DefectXY = newDefectXY;
+            Instance.DefectList = newDefectList;
         }
 
-        public void GetDefectCount()
+        public void GetDefectCount(List<Point> DefectXY)
         {
             for (int i = 0; i < Wafer.sampleTestPlan.Count; i++)
             {
                 Point targetPoint = Wafer.sampleTestPlan[i];
                 int count = DefectXY.Count(p => p.X == targetPoint.X && p.Y == targetPoint.Y);
                 Instance.Wafer.defectCount.Add(count);
-                Instance.Wafer.defectCountIndex = 1;
             }
         }
 
