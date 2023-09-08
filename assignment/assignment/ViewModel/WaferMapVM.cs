@@ -420,9 +420,17 @@ namespace assignment.ViewModel
                             break;
                         }
 
-                        index = i;
-                        break;
+                        else
+                        {
+                            index = i;
+                            break;
+                        }
                     }
+                }
+
+                if (index == -1)
+                {
+                    return;
                 }
 
                 GetAllInfo.Instance.TifValue.imageNum = (int)GetAllInfo.Instance.DefectList[index].defectID;

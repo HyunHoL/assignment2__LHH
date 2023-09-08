@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"             
         xmlns:local="clr-namespace:assignment.ViewModel"
         mc:Ignorable="d"
         Width="{Binding WindowWidth}" Height="{Binding WindowHeight}"
@@ -16,10 +16,11 @@
         <Image x:Name="image" Source="{Binding LoadImage}" Stretch="Fill">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseLeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding MouseLeftButtonDownCommand}" CommandParameter="{Binding }"/>
+                    <i:InvokeCommandAction Command="{Binding MouseLeftButtonDownCommand}"
+                                           />
                 </i:EventTrigger>
                 <i:EventTrigger EventName="MouseLeftButtonUp">
-                    <i:InvokeCommandAction Command="{Binding MouseLeftButtonUpCommand}" CommandParameter="{Binding }"/>
+                    <i:InvokeCommandAction Command="{Binding MouseLeftButtonUpCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <Image.RenderTransform>
@@ -29,7 +30,19 @@
                 <Point>0.5,0.5</Point>
             </Image.RenderTransformOrigin>
         </Image>
-
+        <Line X1="{Binding NewStartPoint.X}" Y1="{Binding NewStartPoint.Y}" X2="{Binding NewEndPoint.X}" Y2="{Binding NewEndPoint.Y}" Stroke="Red" StrokeThickness="2">
+            <Line.Style>
+                <Style TargetType="Line">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Drag}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Line.Style>
+        </Line>
         <Slider VerticalAlignment="Bottom" Maximum="2.0" Minimum="0.5" Value="{Binding ZoomLevel, Mode=TwoWay}" Width="300" SmallChange="0.1" LargeChange="0.2" Margin="0,0,0,28"/>
+        <TextBlock FontSize="30" HorizontalAlignment="Center" Margin="0,30,-7,-144" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

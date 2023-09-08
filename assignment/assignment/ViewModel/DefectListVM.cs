@@ -347,6 +347,7 @@ namespace assignment.ViewModel
                 share.Wafer.displayValue = 1;
             }
 
+            Instance.SaveCoordinate = share.Wafer.sampleTestPlan[share.Wafer.dieNumIndex];
             DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
             DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
             DisplayNullText = "";
@@ -416,6 +417,7 @@ namespace assignment.ViewModel
             }
 
             saveIndex = share.Wafer.dieNumIndex;
+            Instance.SaveCoordinate = share.Wafer.sampleTestPlan[share.Wafer.dieNumIndex];
             DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
             DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
             DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
@@ -440,6 +442,7 @@ namespace assignment.ViewModel
             saveNum.filePath = share.TifValue.filePath;
             share.TifValue = saveNum;
 
+            Instance.SaveCoordinate = share.Wafer.sampleTestPlan[share.Wafer.dieNumIndex];
             DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
             DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
             DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
@@ -474,11 +477,13 @@ namespace assignment.ViewModel
                         saveNum.imageFile = share.TifValue.imageFile;
                         saveNum.filePath = share.TifValue.filePath;
                         share.TifValue = saveNum;
+
                         break;
                     }
                 }
             }
 
+            Instance.SaveCoordinate = share.Wafer.sampleTestPlan[share.Wafer.dieNumIndex];
             DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
             DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
             DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
@@ -518,6 +523,7 @@ namespace assignment.ViewModel
                 }
             }
 
+            Instance.SaveCoordinate = share.Wafer.sampleTestPlan[share.Wafer.dieNumIndex];
             DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
             DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
             DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
@@ -542,6 +548,7 @@ namespace assignment.ViewModel
             saveNum.filePath = share.TifValue.filePath;
             share.TifValue = saveNum;
 
+            Instance.SaveCoordinate = share.Wafer.sampleTestPlan[share.Wafer.dieNumIndex];
             DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
             DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
             DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
@@ -562,7 +569,7 @@ namespace assignment.ViewModel
             {
                 return;
             }
-            
+
             saveNum.imageNum = share.TifValue.imageNum + saveValue;
             saveNum.imageFile = share.TifValue.imageFile;
             saveNum.filePath = share.TifValue.filePath;
@@ -589,6 +596,7 @@ namespace assignment.ViewModel
                 share.Wafer.displayValue = 1;
             }
 
+            Instance.SaveCoordinate = share.Wafer.sampleTestPlan[share.Wafer.dieNumIndex];
             DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
             DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
             DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
@@ -632,6 +640,7 @@ namespace assignment.ViewModel
                     share.Wafer.displayValue = 1;
                 }
 
+                Instance.SaveCoordinate = share.Wafer.sampleTestPlan[share.Wafer.dieNumIndex];
                 DieNum = share.Wafer.dieNumIndex + " / " + share.Wafer.sampleTestPlan.Count;
                 DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
             }

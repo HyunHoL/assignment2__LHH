@@ -23,6 +23,9 @@ namespace assignment.ViewModel
 
         private Point startPoint;
         private Point endPoint;
+        private string distance;
+        private Point newStartPoint, newEndPoint;
+        private bool drag;
 
         #endregion
 
@@ -108,7 +111,6 @@ namespace assignment.ViewModel
             {
                 if (zoomLevel != value)
                 {
-                    double scaleDifference = Math.Abs(value - zoomLevel);
 
                     zoomLevel = value;
                     OnPropertyChanged(nameof(ZoomLevel));
@@ -195,6 +197,61 @@ namespace assignment.ViewModel
             }
         }
 
+        public string Distance
+        {
+            get { return distance; }
+
+            set
+            {
+                if (distance != value)
+                {
+                    distance = value;
+                    OnPropertyChanged("Distance");
+                }
+            }
+        }
+
+        public bool Drag
+        {
+            get { return drag; }
+
+            set
+            {
+                if (drag != value)
+                {
+                    drag = value;
+                    OnPropertyChanged("Drag");
+                }
+            }
+        }
+
+        public Point NewStartPoint
+        {
+            get { return newStartPoint; }
+
+            set
+            {
+                if (newStartPoint != value)
+                {
+                    newStartPoint = value;
+                    OnPropertyChanged("NewStartPoint");
+                }
+            }
+        }
+
+        public Point NewEndPoint
+        {
+            get { return newEndPoint; }
+
+            set
+            {
+                if (newEndPoint != value)
+                {
+                    newEndPoint = value;
+                    OnPropertyChanged("NewEndPoint");
+                }
+            }
+        }
         #region [생성자]
 
         public DefectImageVM()
@@ -207,22 +264,30 @@ namespace assignment.ViewModel
             PointVM.PropertyChanged += PointViewModel_PropertyChanged;
             MainVM = MainViewModel.Instance;
             mainVM.PropertyChanged += MainViewModel_PropertyChanged;
-            MouseLeftButtonDownCommand = new RelayCommand<MouseButtonEventArgs>(MouseLeftButtonDown);
-            MouseLeftButtonUpCommand = new RelayCommand<MouseButtonEventArgs>(MouseLeftButtonUp);
+            MouseLeftButtonDownCommand = new RelayCommand<object>(MouseLeftButtonDown);
+            MouseLeftButtonUpCommand = new RelayCommand<object>(MouseLeftButtonUp);
+            
         }
 
         #endregion
 
         #region [public Method]
 
-        public void MouseLeftButtonDown(MouseButtonEventArgs e)
+        public void MouseLeftButtonDown(object parameter)
         {
-            Point clickPoint = e.GetPosition((IInputElement)e.Source);
+            startPoint = Mouse.GetPosition(null);
+            Drag = true;
         }
 
-        public void MouseLeftButtonUp(MouseButtonEventArgs e)
+        public void MouseLeftButtonUp(object parameter)
         {
-            Point clickPoint = e.GetPosition((IInputElement)e.Source);
+            endPoint = Mouse.GetPosition(null);
+            NewStartPoint = new Point { X = startPoint.X - MainViewModel.Instance.ActualWidth / 2, Y = startPoint.Y - MainViewModel.Instance.ActualHeight / 2 };
+            NewEndPoint = new Point { X = endPoint.X - MainViewModel.Instance.ActualWidth / 2, Y = endPoint.Y - MainViewModel.Instance.ActualHeight / 2 };
+            Drag = false;
+            double saveResult = 50 * Math.Sqrt(Math.Pow(startPoint.X - endPoint.X, 2) + Math.Pow(startPoint.Y - endPoint.Y, 2)) / 230;
+            saveResult = Math.Floor(saveResult / ZoomLevel * 1000) / 1000.0;
+            Distance = saveResult.ToString() + "μm";
         }
 
         /**
@@ -233,12 +298,12 @@ namespace assignment.ViewModel
 
         public void AddImage()
         {
-            if (share.TifValue.imageNum != 0)
+            if (share.TifValue.imageNum != 0 && share.TifValue.imageFile != null)
             {
                 LoadImage = share.TifValue.imageFile.Frames[share.TifValue.imageNum - 1];
             }
 
-            else
+            else if (share.TifValue.imageFile != null)
             {
                 LoadImage = share.TifValue.imageFile.Frames[share.TifValue.imageNum];
             }

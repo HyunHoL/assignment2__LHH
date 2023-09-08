@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace assignment.ViewModel
 {
@@ -14,7 +15,7 @@ namespace assignment.ViewModel
         private static MainViewModel instance;
         private double actualWidth;
         private double actualHeight;
-
+        private Point newStartPoint, newEndPoint;
 
         #endregion
 
@@ -68,6 +69,34 @@ namespace assignment.ViewModel
             }
         }
 
+
+        public Point NewStartPoint
+        {
+            get { return newStartPoint; }
+
+            set
+            {
+                if (newStartPoint != value)
+                {
+                    newStartPoint = value;
+                    OnPropertyChanged("NewStartPoint");
+                }
+            }
+        }
+
+        public Point NewEndPoint
+        {
+            get { return newEndPoint; }
+
+            set
+            {
+                if (newEndPoint != value)
+                {
+                    newEndPoint = value;
+                    OnPropertyChanged("NewEndPoint");
+                }
+            }
+        }
         #endregion
 
 
@@ -78,6 +107,8 @@ namespace assignment.ViewModel
         {
             ActualHeight = 1000;
             ActualWidth = 1500;
+            NewStartPoint = new Point { X = 780, Y = 400 };
+            NewEndPoint = new Point { X = 900, Y = 400 };
         }
 
         #endregion

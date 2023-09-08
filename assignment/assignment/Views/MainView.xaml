@@ -31,5 +31,7 @@
         <local:WaferMap Grid.Row="0" Grid.Column="0"/>
         <local:DefectList Grid.Row="1" Grid.Column="1"/>
         <local:DefectImage Grid.Row="0" Grid.Column="1"/>
+        <Line X1="{Binding NewStartPoint.X}" Y1="{Binding NewStartPoint.Y}" X2="{Binding NewEndPoint.X}" Y2="{Binding NewEndPoint.Y}" Stroke="Red" StrokeThickness="2"/>
+
     </Grid>
 </Window>
