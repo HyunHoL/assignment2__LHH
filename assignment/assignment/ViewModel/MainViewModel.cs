@@ -15,7 +15,6 @@ namespace assignment.ViewModel
         private static MainViewModel instance;
         private double actualWidth;
         private double actualHeight;
-        private Point newStartPoint, newEndPoint;
 
         #endregion
 
@@ -43,13 +42,8 @@ namespace assignment.ViewModel
 
             set
             {
-                double widthDifference = Math.Abs(value - actualWidth);
-
-                if (widthDifference >= 50)
-                {
-                    actualWidth = value;
-                    OnPropertyChanged("ActualWidth");
-                }
+                actualWidth = value;
+                OnPropertyChanged("ActualWidth");
             }
         }
 
@@ -59,44 +53,11 @@ namespace assignment.ViewModel
 
             set
             {
-                double heightDifference = Math.Abs(value - actualHeight);
-
-                if (heightDifference >= 50)
-                {
-                    actualHeight = value;
-                    OnPropertyChanged("ActualHeight");
-                }
+                actualHeight = value;
+                OnPropertyChanged("ActualHeight");
             }
         }
 
-
-        public Point NewStartPoint
-        {
-            get { return newStartPoint; }
-
-            set
-            {
-                if (newStartPoint != value)
-                {
-                    newStartPoint = value;
-                    OnPropertyChanged("NewStartPoint");
-                }
-            }
-        }
-
-        public Point NewEndPoint
-        {
-            get { return newEndPoint; }
-
-            set
-            {
-                if (newEndPoint != value)
-                {
-                    newEndPoint = value;
-                    OnPropertyChanged("NewEndPoint");
-                }
-            }
-        }
         #endregion
 
 
@@ -107,8 +68,6 @@ namespace assignment.ViewModel
         {
             ActualHeight = 1000;
             ActualWidth = 1500;
-            NewStartPoint = new Point { X = 780, Y = 400 };
-            NewEndPoint = new Point { X = 900, Y = 400 };
         }
 
         #endregion

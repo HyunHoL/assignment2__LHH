@@ -356,6 +356,12 @@ namespace assignment.ViewModel
             return minXY;
         }
 
+        /**
+        * @brief GetAllInfo 클래스에서 이벤트를 받아오는 함수
+        * 날짜|작성자|설명
+        * 2023-09-01|이현호|
+        */
+
         private void GetAllInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Wafer")
@@ -369,6 +375,12 @@ namespace assignment.ViewModel
             }
         }
 
+        /**
+        * @brief MainViewModel 클래스에서 이벤트를 받아오는 함수
+        * 날짜|작성자|설명
+        * 2023-09-01|이현호|
+        */
+
         private void MainViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if ((e.PropertyName == "ActualWidth" || e.PropertyName == "ActualHeight") && GetAllInfo.Instance.Wafer.sampleTestPlan != null && GetAllInfo.Instance.DefectXY != null)
@@ -377,6 +389,12 @@ namespace assignment.ViewModel
                 UpdateDefectXY();
             }
         }
+
+        /**
+        * @brief DefectListVM 클래스에서 버튼, DefectList가 클릭되었을 때, WaferMap에 파란 테두리를 그려주는 함수
+        * 날짜|작성자|설명
+        * 2023-09-07|이현호|
+        */
 
         private void DefectListVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {

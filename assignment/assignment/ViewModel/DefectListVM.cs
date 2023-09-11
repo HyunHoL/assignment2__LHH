@@ -423,6 +423,12 @@ namespace assignment.ViewModel
             DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
         }
 
+        /**
+        * @brief 버튼을 클릭하였을 때, 한 Die에 여러 Defect이 존재할 경우 다음 Defect으로 넘겨주는 함수  
+        * @note Patch-notes
+        * 2022-09-07|이현호|
+        */
+
         public void UpDefectCount(object parameter)
         {
             if (share.Wafer.displayValue == share.Wafer.defectCount[share.Wafer.dieNumIndex])
@@ -447,6 +453,12 @@ namespace assignment.ViewModel
             DefectCount = share.Wafer.displayValue + " / " + share.Wafer.defectCount[share.Wafer.dieNumIndex];
             DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
         }
+
+        /**
+        * @brief 버튼을 클릭하였을 때, 다음 Die로 넘겨주는 함수  
+        * @note Patch-notes
+        * 2022-09-07|이현호|
+        */
 
         public void UpDieNum (object parameter)
         {
@@ -489,6 +501,12 @@ namespace assignment.ViewModel
             DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
         }
 
+        /**
+        * @brief 버튼을 클릭하였을 때, 이전 Die로 넘겨주는 함수  
+        * @note Patch-notes
+        * 2022-09-07|이현호|
+        */
+
         public void DownDieNum (object parameter)
         {
             if (share.Wafer.dieNumIndex == 1)
@@ -529,6 +547,11 @@ namespace assignment.ViewModel
             DefectListNum = share.TifValue.imageNum + " / " + share.DefectList.Count;
         }
 
+        /**
+        * @brief 버튼을 클릭하였을 때, 한 Die에 여러 Defect이 존재할 경우 이전 Defect으로 넘겨주는 함수  
+        * @note Patch-notes
+        * 2022-09-07|이현호|
+        */
         public void DownDefectCount(object parameter)
         {
             if (share.Wafer.displayValue == 1 || share.Wafer.displayValue == 0)
@@ -606,6 +629,12 @@ namespace assignment.ViewModel
 
         #region [private Method]
 
+        /**
+        * @brief GetAllInfo 클래스에서 이벤트를 받아오는 함수
+        * @note Patch-notes
+        * 2022-09-04|이현호|
+        */
+
         private void GetAllInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "DefectList")
@@ -613,6 +642,12 @@ namespace assignment.ViewModel
                 AddValue();
             }
         }
+
+        /**
+        * @brief PointViewModel 클래스에서 IsClicked 이벤트가 발생하여 WaferMap이 변경되었을 때, DefectListView에도 적용해주는 함수
+        * @note Patch-notes
+        * 2022-09-06|이현호|
+        */
 
         private void PointViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {

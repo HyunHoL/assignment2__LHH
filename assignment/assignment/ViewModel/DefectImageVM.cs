@@ -24,13 +24,18 @@ namespace assignment.ViewModel
         private Point startPoint;
         private Point endPoint;
         private string distance;
-        private Point newStartPoint, newEndPoint;
-        private bool drag;
-
+        private bool startDrag;
+        private Point dragPoint;
+        private double firstWidth;
         #endregion
+
+        #region [인터페이스]
 
         public ICommand MouseLeftButtonDownCommand { get; }
         public ICommand MouseLeftButtonUpCommand { get; }
+        public ICommand MouseDraggingCommand { get; }
+
+        #endregion
 
         #region [속성]
 
@@ -181,8 +186,11 @@ namespace assignment.ViewModel
 
             set
             {
-                startPoint = value;
-                OnPropertyChanged("StartPoint");
+                if (startPoint != value)
+                {
+                    startPoint = value;
+                    OnPropertyChanged("StartPoint");
+                }
             }
         }
 
@@ -192,11 +200,27 @@ namespace assignment.ViewModel
 
             set
             {
-                endPoint = value;
-                OnPropertyChanged("EndPoint");
+                if (endPoint != value)
+                {
+                    endPoint = value;
+                    OnPropertyChanged("EndPoint");
+                }
             }
         }
 
+        public Point DragPoint
+        {
+            get { return dragPoint; }
+
+            set
+            {
+                if (dragPoint != value)
+                {
+                    dragPoint = value;
+                    OnPropertyChanged("DragPoint");
+                }
+            }
+        }
         public string Distance
         {
             get { return distance; }
@@ -211,47 +235,20 @@ namespace assignment.ViewModel
             }
         }
 
-        public bool Drag
+        public bool StartDrag
         {
-            get { return drag; }
+            get { return startDrag; }
 
             set
             {
-                if (drag != value)
+                if (startDrag != value)
                 {
-                    drag = value;
-                    OnPropertyChanged("Drag");
+                    startDrag = value;
+                    OnPropertyChanged("StartDrag");
                 }
             }
         }
 
-        public Point NewStartPoint
-        {
-            get { return newStartPoint; }
-
-            set
-            {
-                if (newStartPoint != value)
-                {
-                    newStartPoint = value;
-                    OnPropertyChanged("NewStartPoint");
-                }
-            }
-        }
-
-        public Point NewEndPoint
-        {
-            get { return newEndPoint; }
-
-            set
-            {
-                if (newEndPoint != value)
-                {
-                    newEndPoint = value;
-                    OnPropertyChanged("NewEndPoint");
-                }
-            }
-        }
         #region [생성자]
 
         public DefectImageVM()
@@ -266,28 +263,62 @@ namespace assignment.ViewModel
             mainVM.PropertyChanged += MainViewModel_PropertyChanged;
             MouseLeftButtonDownCommand = new RelayCommand<object>(MouseLeftButtonDown);
             MouseLeftButtonUpCommand = new RelayCommand<object>(MouseLeftButtonUp);
-            
+            MouseDraggingCommand = new RelayCommand<object>(MouseLeftDragging);
+            firstWidth = MainViewModel.Instance.ActualWidth / 2;
         }
 
         #endregion
 
         #region [public Method]
 
+        /**
+        * @brief 마우스 왼쪽을 클릭했을 때, 해당 위치의 좌표를 받아오는 함수
+        * @param 마우스 클릭 시, 해당 위치의 좌표
+        * @note Patch-notes
+        * 날짜|작성자|설명
+        * 2022-09-08|이현호|
+        * 2022-09-11|이현호|DragPoint의 초기값을 StartPoint로 지정, Line이 이상하게 그려져 X값 조정
+        */
+
         public void MouseLeftButtonDown(object parameter)
         {
-            startPoint = Mouse.GetPosition(null);
-            Drag = true;
+            StartPoint = new Point { X = Mouse.GetPosition(null).X - WindowWidth + 5, Y = Mouse.GetPosition(null).Y};
+            DragPoint = StartPoint;
+            StartDrag = true;
         }
+
+        /**
+        * @brief 마우스 왼쪽을 클릭을 해제했을 때, 해당 위치의 좌표를 받아오고 StartPoint와 EndPoint의 거리를 출력해주는 함수
+        * @param 마우스 클릭 해제 시, 해당 위치의 좌표
+        * @note Patch-notes
+        * 날짜|작성자|설명
+        * 2022-09-08|이현호|
+        * 2022-09-11|이현호|Line이 이상하게 그려져 X값 조정
+        */
 
         public void MouseLeftButtonUp(object parameter)
         {
-            endPoint = Mouse.GetPosition(null);
-            NewStartPoint = new Point { X = startPoint.X - MainViewModel.Instance.ActualWidth / 2, Y = startPoint.Y - MainViewModel.Instance.ActualHeight / 2 };
-            NewEndPoint = new Point { X = endPoint.X - MainViewModel.Instance.ActualWidth / 2, Y = endPoint.Y - MainViewModel.Instance.ActualHeight / 2 };
-            Drag = false;
-            double saveResult = 50 * Math.Sqrt(Math.Pow(startPoint.X - endPoint.X, 2) + Math.Pow(startPoint.Y - endPoint.Y, 2)) / 230;
+            EndPoint = new Point { X = Mouse.GetPosition(null).X - WindowWidth + 5, Y = Mouse.GetPosition(null).Y};
+            StartDrag = false;
+            double saveResult = 50 * Math.Sqrt(Math.Pow(StartPoint.X - EndPoint.X, 2) + Math.Pow(StartPoint.Y - EndPoint.Y, 2)) / 230 * (firstWidth / WindowWidth);
             saveResult = Math.Floor(saveResult / ZoomLevel * 1000) / 1000.0;
             Distance = saveResult.ToString() + "μm";
+        }
+
+        /**
+        * @brief 마우스 왼쪽을 클릭했을 때, 이동하는 마우스의 좌표를 받아오는 함수
+        * @param 마우스 Drag시, 해당 위치의 좌표
+        * @note Patch-notes
+        * 날짜|작성자|설명
+        * 2022-09-11|이현호|
+        * */
+
+        public void MouseLeftDragging(object parameter)
+        {
+            if (StartDrag == true)
+            {
+                DragPoint = new Point { X = Mouse.GetPosition(null).X - WindowWidth + 5, Y = Mouse.GetPosition(null).Y };
+            }
         }
 
         /**
@@ -309,6 +340,7 @@ namespace assignment.ViewModel
             }
             WindowWidth = MainViewModel.Instance.ActualWidth / 2;
             WindowHeight = MainViewModel.Instance.ActualHeight / 2;
+
         }
 
         #endregion
@@ -316,6 +348,12 @@ namespace assignment.ViewModel
 
 
         #region [private Method]
+
+        /**
+        * @brief PointViewModel 클래스에서 IsClicked의 값이 변경되었을 때, 이벤트를 받아오는 함수  
+        * @note Patch-notes
+        * 2022-09-07|이현호|
+        */
 
         private void PointViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -338,6 +376,12 @@ namespace assignment.ViewModel
                 AddImage();
             }
         }
+
+        /**
+        * @brief MainViewModel 클래스에서 Window Size 값이 변경되었을 때, 이벤트를 받아오는 함수  
+        * @note Patch-notes
+        * 2022-09-07|이현호|
+        */
 
         private void MainViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
