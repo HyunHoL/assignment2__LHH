@@ -26,7 +26,8 @@ namespace assignment.ViewModel
         private string distance;
         private bool startDrag;
         private Point dragPoint;
-        private double firstWidth;
+        private double firstWidth, firstHeight;
+        private Thickness textBlockMargin;
         #endregion
 
         #region [인터페이스]
@@ -249,6 +250,20 @@ namespace assignment.ViewModel
             }
         }
 
+        public Thickness TextBlockMargin
+        {
+            get { return textBlockMargin; }
+
+            set
+            {
+                if (textBlockMargin != value)
+                {
+                    textBlockMargin = value;
+                    OnPropertyChanged("TextBlockMargin");
+                }
+            }
+        }
+
         #region [생성자]
 
         public DefectImageVM()
@@ -265,6 +280,7 @@ namespace assignment.ViewModel
             MouseLeftButtonUpCommand = new RelayCommand<object>(MouseLeftButtonUp);
             MouseDraggingCommand = new RelayCommand<object>(MouseLeftDragging);
             firstWidth = MainViewModel.Instance.ActualWidth / 2;
+            firstHeight = MainViewModel.Instance.ActualHeight / 2;
         }
 
         #endregion
@@ -276,8 +292,8 @@ namespace assignment.ViewModel
         * @param 마우스 클릭 시, 해당 위치의 좌표
         * @note Patch-notes
         * 날짜|작성자|설명
-        * 2022-09-08|이현호|
-        * 2022-09-11|이현호|DragPoint의 초기값을 StartPoint로 지정, Line이 이상하게 그려져 X값 조정
+        * 2023-09-08|이현호|
+        * 2023-09-11|이현호|DragPoint의 초기값을 StartPoint로 지정, Line이 이상하게 그려져 X값 조정
         */
 
         public void MouseLeftButtonDown(object parameter)
@@ -292,14 +308,15 @@ namespace assignment.ViewModel
         * @param 마우스 클릭 해제 시, 해당 위치의 좌표
         * @note Patch-notes
         * 날짜|작성자|설명
-        * 2022-09-08|이현호|
-        * 2022-09-11|이현호|Line이 이상하게 그려져 X값 조정
+        * 2023-09-08|이현호|
+        * 2023-09-11|이현호|Line이 이상하게 그려져 X값 조정
+        * 2023-09-11|이현호|화면 크기 비율에 맞게 결과값 조정
         */
 
         public void MouseLeftButtonUp(object parameter)
         {
-            EndPoint = new Point { X = Mouse.GetPosition(null).X - WindowWidth + 5, Y = Mouse.GetPosition(null).Y};
             StartDrag = false;
+            EndPoint = new Point { X = Mouse.GetPosition(null).X - WindowWidth + 5, Y = Mouse.GetPosition(null).Y};
             double saveResult = 50 * Math.Sqrt(Math.Pow(StartPoint.X - EndPoint.X, 2) + Math.Pow(StartPoint.Y - EndPoint.Y, 2)) / 230 * (firstWidth / WindowWidth);
             saveResult = Math.Floor(saveResult / ZoomLevel * 1000) / 1000.0;
             Distance = saveResult.ToString() + "μm";
@@ -310,21 +327,25 @@ namespace assignment.ViewModel
         * @param 마우스 Drag시, 해당 위치의 좌표
         * @note Patch-notes
         * 날짜|작성자|설명
-        * 2022-09-11|이현호|
-        * */
+        * 2023-09-11|이현호|
+        */
 
         public void MouseLeftDragging(object parameter)
         {
             if (StartDrag == true)
             {
                 DragPoint = new Point { X = Mouse.GetPosition(null).X - WindowWidth + 5, Y = Mouse.GetPosition(null).Y };
+                TextBlockMargin = new Thickness(DragPoint.X - 50, DragPoint.Y, 0, 0);
+                double saveResult = 50 * Math.Sqrt(Math.Pow(StartPoint.X - DragPoint.X, 2) + Math.Pow(StartPoint.Y - DragPoint.Y, 2)) / 230 * (firstWidth / WindowWidth) * (firstHeight / WindowHeight);
+                saveResult = Math.Floor(saveResult / ZoomLevel * 1000) / 1000.0;
+                Distance = saveResult.ToString() + "μm";
             }
         }
 
         /**
         * @brief 이미지 번호에 맞게 이미지를 출력해주는 함수  
         * @note Patch-notes
-        * 2022-09-04|이현호|
+        * 2023-09-04|이현호|
         */
 
         public void AddImage()
@@ -343,6 +364,7 @@ namespace assignment.ViewModel
 
         }
 
+
         #endregion
 
 
@@ -352,7 +374,7 @@ namespace assignment.ViewModel
         /**
         * @brief PointViewModel 클래스에서 IsClicked의 값이 변경되었을 때, 이벤트를 받아오는 함수  
         * @note Patch-notes
-        * 2022-09-07|이현호|
+        * 2023-09-07|이현호|
         */
 
         private void PointViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -366,7 +388,7 @@ namespace assignment.ViewModel
         /**
         * @brief GetAllInfo 클래스에서 TifValue의 값이 변경되었을 때, 이벤트를 받아오는 함수  
         * @note Patch-notes
-        * 2022-09-04|이현호|
+        * 2023-09-04|이현호|
         */
 
         private void GetAllInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -380,7 +402,7 @@ namespace assignment.ViewModel
         /**
         * @brief MainViewModel 클래스에서 Window Size 값이 변경되었을 때, 이벤트를 받아오는 함수  
         * @note Patch-notes
-        * 2022-09-07|이현호|
+        * 2023-09-07|이현호|
         */
 
         private void MainViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)

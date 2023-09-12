@@ -136,7 +136,7 @@ namespace assignment.Model
         /**
         * @brief 파일을 열고 001 파일의 경로와 001 파일에 들어 있는 정보를 저장하는 함수  
         * @note Patch-notes
-        * 2022-08-28|이현호|
+        * 2023-08-28|이현호|
         */
 
         public void GetFileData()
@@ -169,7 +169,7 @@ namespace assignment.Model
         /**
         * @brief 001 파일 정보에서 필요한 Wafer 정보를 추출해내는 함수  
         * @note Patch-notes
-        * 2022-08-28|이현호|
+        * 2023-08-28|이현호|
         */
 
         public void ReadWaferInfo()
@@ -218,7 +218,7 @@ namespace assignment.Model
         /**
         * @brief 001 파일 정보에서 필요한 Defect 정보를 추출해내는 함수  
         * @note Patch-notes
-        * 2022-08-30|이현호|
+        * 2023-08-30|이현호|
         */
 
         public void GetDefectList()
@@ -266,7 +266,7 @@ namespace assignment.Model
         /**
         * @brief TIF 파일에서 이미지 정보를 추출해내는 함수  
         * @note Patch-notes
-        * 2022-09-04|이현호|
+        * 2023-09-04|이현호|
         */
 
         public void GetTifData()
@@ -291,7 +291,7 @@ namespace assignment.Model
         /**
         * @brief Defect정보 중 Defect List에 값을 채워주는 함수  
         * @note Patch-notes
-        * 2022-08-30|이현호|
+        * 2023-08-30|이현호|
         */
 
         private void AddInfo(string[] values, DefectInfo saveValue)

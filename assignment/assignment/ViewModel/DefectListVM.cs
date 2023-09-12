@@ -49,7 +49,7 @@ namespace assignment.ViewModel
         /**
         * @brief DefectList를 클릭하였을 때, 해당 DefectList에서 이미지 번호를 뽑아오는 함수  
         * @note Patch-notes
-        * 2022-09-04|이현호|
+        * 2023-09-04|이현호|
         */
 
         public DefectInfo SelectedDefectList
@@ -319,7 +319,7 @@ namespace assignment.ViewModel
         /**
         * @brief DefectList View에 값을 출력하게 해주는 함수  
         * @note Patch-notes
-        * 2022-08-31|이현호|
+        * 2023-08-31|이현호|
         */
 
         public void AddValue()
@@ -367,7 +367,7 @@ namespace assignment.ViewModel
         /**
         * @brief 버튼을 클릭하였을 때, 다음 Defect으로 넘겨주는 함수  
         * @note Patch-notes
-        * 2022-09-04|이현호|
+        * 2023-09-04|이현호|
         */
 
         public void UpDefectNumber(object parameter)
@@ -426,7 +426,7 @@ namespace assignment.ViewModel
         /**
         * @brief 버튼을 클릭하였을 때, 한 Die에 여러 Defect이 존재할 경우 다음 Defect으로 넘겨주는 함수  
         * @note Patch-notes
-        * 2022-09-07|이현호|
+        * 2023-09-07|이현호|
         */
 
         public void UpDefectCount(object parameter)
@@ -457,7 +457,7 @@ namespace assignment.ViewModel
         /**
         * @brief 버튼을 클릭하였을 때, 다음 Die로 넘겨주는 함수  
         * @note Patch-notes
-        * 2022-09-07|이현호|
+        * 2023-09-07|이현호|
         */
 
         public void UpDieNum (object parameter)
@@ -504,7 +504,7 @@ namespace assignment.ViewModel
         /**
         * @brief 버튼을 클릭하였을 때, 이전 Die로 넘겨주는 함수  
         * @note Patch-notes
-        * 2022-09-07|이현호|
+        * 2023-09-07|이현호|
         */
 
         public void DownDieNum (object parameter)
@@ -550,7 +550,7 @@ namespace assignment.ViewModel
         /**
         * @brief 버튼을 클릭하였을 때, 한 Die에 여러 Defect이 존재할 경우 이전 Defect으로 넘겨주는 함수  
         * @note Patch-notes
-        * 2022-09-07|이현호|
+        * 2023-09-07|이현호|
         */
         public void DownDefectCount(object parameter)
         {
@@ -580,7 +580,7 @@ namespace assignment.ViewModel
         /**
         * @brief 버튼을 클릭하였을 때, 이전 Defect으로 넘겨주는 함수  
         * @note Patch-notes
-        * 2022-09-04|이현호|
+        * 2023-09-04|이현호|
         */
 
         public void DownDefectNumber(object parameter)
@@ -632,7 +632,7 @@ namespace assignment.ViewModel
         /**
         * @brief GetAllInfo 클래스에서 이벤트를 받아오는 함수
         * @note Patch-notes
-        * 2022-09-04|이현호|
+        * 2023-09-04|이현호|
         */
 
         private void GetAllInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -646,7 +646,7 @@ namespace assignment.ViewModel
         /**
         * @brief PointViewModel 클래스에서 IsClicked 이벤트가 발생하여 WaferMap이 변경되었을 때, DefectListView에도 적용해주는 함수
         * @note Patch-notes
-        * 2022-09-06|이현호|
+        * 2023-09-06|이현호|
         */
 
         private void PointViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)

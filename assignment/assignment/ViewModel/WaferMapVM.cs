@@ -275,8 +275,14 @@ namespace assignment.ViewModel
         public void UpdateSampleTestPlan ()
         {
             Coordinates.Clear();
-            Point MaxValue = GetMaxValue();
-            Point MinValue = GetMinValue();
+            Point MaxValue = new Point();
+            Point MinValue = new Point();
+
+            if (GetAllInfo.Instance.Wafer.sampleTestPlan.Count != 0)
+            {
+                MaxValue = GetMaxValue();
+                MinValue = GetMinValue();
+            }
 
             RectangleWidth = MainViewModel.Instance.ActualWidth / (2 * (MaxValue.X - MinValue.X + 1)) - 0.5;
             RectangleHeight = MainViewModel.Instance.ActualHeight / (2 * (MaxValue.Y - MinValue.Y + 1)) - 0.4;
@@ -300,8 +306,14 @@ namespace assignment.ViewModel
         public void UpdateDefectXY()
         {
             DefectCoordinates.Clear();
-            Point MaxValue = GetMaxValue();
-            Point MinValue = GetMinValue();
+            Point MaxValue = new Point();
+            Point MinValue = new Point();
+
+            if (GetAllInfo.Instance.Wafer.sampleTestPlan.Count != 0)
+            {
+                MaxValue = GetMaxValue();
+                MinValue = GetMinValue();
+            }
 
             RectangleWidth = MainViewModel.Instance.ActualWidth / (2 * (MaxValue.X - MinValue.X + 1)) - 0.5;
             RectangleHeight = MainViewModel.Instance.ActualHeight / (2 * (MaxValue.Y - MinValue.Y + 1)) - 0.4;
@@ -394,6 +406,7 @@ namespace assignment.ViewModel
         * @brief DefectListVM 클래스에서 버튼, DefectList가 클릭되었을 때, WaferMap에 파란 테두리를 그려주는 함수
         * 날짜|작성자|설명
         * 2023-09-07|이현호|
+        * 2023-09-12|이현호|target의 인덱스를 찾는 부분을 GetIndex 메서드로 따로 빼줌
         */
 
         private void DefectListVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -409,42 +422,7 @@ namespace assignment.ViewModel
 
                 int index = -1;
 
-                for (int i = 0; i < DefectCoordinates.Count; i++)
-                {
-
-                    if (DefectCoordinates[i].selectedXY == target)
-                    {
-                        if (i + 3 >= DefectCoordinates.Count)
-                        {
-                            index = i;
-                            break;
-                        }
-
-                        else if (DefectCoordinates[i + 3].selectedXY == target)
-                        {
-                            index = i + 3;
-                            break;
-                        }
-
-                        else if (DefectCoordinates[i + 2].selectedXY == target)
-                        {
-                            index = i + 2;
-                            break;
-                        }
-
-                        else if (DefectCoordinates[i + 1].selectedXY == target)
-                        {
-                            index = i + 1;
-                            break;
-                        }
-
-                        else
-                        {
-                            index = i;
-                            break;
-                        }
-                    }
-                }
+                index = GetIndex(target, index);
 
                 if (index == -1)
                 {
@@ -468,6 +446,56 @@ namespace assignment.ViewModel
 
                 DefectCoordinates[index].IsClicked = !DefectCoordinates[index].IsClicked;
             }
+        }
+
+        /**
+        * @brief 좌표에 해당하는 인덱스 값을 반환해주는 함수
+        * @param target -> 찾고자하는 좌표 값, index 반환하는 인덱스 값을 저장하는 곳
+        * @return (int) : 찾고자하는 좌표의 인덱스
+        * 날짜|작성자|설명
+        * 2023-09-12|이현호|
+        */
+
+        private int GetIndex(Point target, int index)
+        {
+            for (int i = 0; i < DefectCoordinates.Count; i++)
+            {
+
+                if (DefectCoordinates[i].selectedXY == target)
+                {
+                    if (i + 3 >= DefectCoordinates.Count)
+                    {
+                        index = i;
+                        break;
+                    }
+
+                    else if (DefectCoordinates[i + 3].selectedXY == target)
+                    {
+                        index = i + 3;
+                        break;
+                    }
+
+                    else if (DefectCoordinates[i + 2].selectedXY == target)
+                    {
+                        index = i + 2;
+                        break;
+                    }
+
+                    else if (DefectCoordinates[i + 1].selectedXY == target)
+                    {
+                        index = i + 1;
+                        break;
+                    }
+
+                    else
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+            }
+
+            return index;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

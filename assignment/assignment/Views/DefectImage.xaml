@@ -45,6 +45,17 @@
             </Line.Style>
         </Line>
         <Slider VerticalAlignment="Bottom" Maximum="2.0" Minimum="0.5" Value="{Binding ZoomLevel, Mode=TwoWay}" Width="300" SmallChange="0.1" LargeChange="0.2" Margin="0,0,0,28"/>
-        <TextBlock FontSize="30" Background="White" HorizontalAlignment="Center" Margin="0,30,-7,-144" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Top"/>
+        <TextBlock FontSize="20" Background="White" HorizontalAlignment="Center" Margin="{Binding TextBlockMargin}" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Top" >
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding StartDrag}" Value="true">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
     </Grid>
 </UserControl>
